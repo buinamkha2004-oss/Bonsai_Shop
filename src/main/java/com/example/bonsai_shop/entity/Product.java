@@ -1,0 +1,74 @@
+package com.example.bonsai_shop.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity
+@Table(name = "PRODUCT")
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ProductID")
+    private Integer productId;
+
+    @ManyToOne
+    @JoinColumn(name = "VarietyID", nullable = false)
+    private Variety variety;
+
+    @ManyToOne
+    @JoinColumn(name = "SegmentID", nullable = false)
+    private ProductSegment segment;
+
+    @Column(name = "ProductCode", nullable = false, unique = true, length = 100)
+    private String productCode;
+
+    @Column(name = "ProductName", nullable = false, length = 255)
+    private String productName;
+
+    @Column(name = "Description", columnDefinition = "TEXT")
+    private String description;
+
+    @Column(name = "Age")
+    private Integer age;
+
+    @Column(name = "Height")
+    private Float height;
+
+    @Column(name = "TrunkDiameter")
+    private Float trunkDiameter;
+
+    @Column(name = "Style", length = 255)
+    private String style;
+
+    @Column(name = "Price", nullable = false, precision = 15, scale = 2)
+    private BigDecimal price;
+
+    @Column(name = "IsPublicPrice")
+    private Boolean isPublicPrice = true;
+
+    @Column(name = "ProductStatus", length = 50)
+    private String productStatus = "AVAILABLE";
+
+    @Column(name = "ViewCount")
+    private Integer viewCount = 0;
+
+    @Column(name = "CreatedAt")
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductTag> productTags;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductMedia> productMedias;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Wishlist> wishlists;
+}
