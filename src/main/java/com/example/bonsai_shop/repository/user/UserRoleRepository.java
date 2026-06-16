@@ -1,4 +1,4 @@
-package com.example.bonsai_shop.repository;
+package com.example.bonsai_shop.repository.user;
 
 import com.example.bonsai_shop.entity.UserRole;
 import com.example.bonsai_shop.entity.User;

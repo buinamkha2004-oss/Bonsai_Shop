@@ -1,4 +1,4 @@
-package com.example.bonsai_shop.repository;
+package com.example.bonsai_shop.repository.user;
 
 import com.example.bonsai_shop.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;

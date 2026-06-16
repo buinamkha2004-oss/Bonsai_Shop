@@ -1,4 +1,4 @@
-package com.example.bonsai_shop.controller;
+package com.example.bonsai_shop.controller.user;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

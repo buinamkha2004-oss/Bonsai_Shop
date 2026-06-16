@@ -1,6 +1,6 @@
 package com.example.bonsai_shop.config;
 
-import com.example.bonsai_shop.service.CustomUserDetailsService;
+import com.example.bonsai_shop.service.user.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +32,13 @@ public class SecurityConfig {
                                 "/products/**",
                                 "/register",
                                 "/login",
-                                "/static/css/**",      // ← cho phép CSS
+                                "/forgot-password",
+                                "/verify-otp",
+                                "/resend-otp",
+                                "/reset-password",
+                                "/verify-otp-to-reset-password",
+                                "/resend-otp-reset",
+                                "/css/**",      // ← cho phép CSS
                                 "/js/**",       // ← cho phép JS
                                 "/images/**"    // ← cho phép images
                         ).permitAll()

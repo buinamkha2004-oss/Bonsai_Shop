@@ -17,9 +17,8 @@
     </div>
 
     <!-- THÔNG BÁO -->
-    <div th:if="${param.error}" class="alert alert-error">
-        ❌ Email hoặc mật khẩu không đúng!
-    </div>
+    <div th:if="${error1}" th:text="${error1}" class="alert alert-error"></div>
+     <div th:if="${success}" th:text="${success}" class="alert alert-success"></div>
     <div th:if="${param.logout}" class="alert alert-success">
         ✅ Đăng xuất thành công!
     </div>
@@ -47,6 +46,12 @@
 
     <div class="register-link">
         Chưa có tài khoản? <a th:href="@{/register}">Đăng ký ngay</a>
+    </div>
+
+    <div style="text-align:center; margin-top:10px;">
+        <a th:href="@{/forgot-password}" style="color:#2d6a4f; font-size:14px;">
+            Quên mật khẩu?
+        </a>
     </div>
 
 </div>
