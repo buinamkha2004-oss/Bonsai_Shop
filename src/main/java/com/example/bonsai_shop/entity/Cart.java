@@ -16,8 +16,8 @@ public class Cart {
     private Integer cartId;
 
     @OneToOne
-    @JoinColumn(name = "UserID", nullable = false)
-    private User user;
+    @JoinColumn(name = "CustomerID", nullable = false)
+    private User customer;
 
     @Column(name = "CreatedAt")
     private LocalDateTime createdAt = LocalDateTime.now();

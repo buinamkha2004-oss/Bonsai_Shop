@@ -17,6 +17,10 @@ public class Product {
     private Integer productId;
 
     @ManyToOne
+    @JoinColumn(name = "SellerID")
+    private User seller;
+
+    @ManyToOne
     @JoinColumn(name = "VarietyID", nullable = false)
     private Variety variety;
 

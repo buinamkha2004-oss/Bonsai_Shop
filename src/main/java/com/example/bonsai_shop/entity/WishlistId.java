@@ -5,6 +5,6 @@ import java.io.Serializable;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @EqualsAndHashCode
 public class WishlistId implements Serializable {
-    private Integer user;
+    private Integer customer;
     private Integer product;
 }

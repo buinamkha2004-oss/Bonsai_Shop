@@ -6,7 +6,7 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@Table(name = "category")
+@Table(name = "CATEGORY")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,7 +18,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CategoryID")
-    private Integer categoryID;
+    private Integer categoryId;
 
     @Column(name = "CategoryName", nullable = false, length = 255)
     private String categoryName;

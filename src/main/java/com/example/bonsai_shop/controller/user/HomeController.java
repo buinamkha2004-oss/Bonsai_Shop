@@ -1,20 +1,34 @@
 package com.example.bonsai_shop.controller.user;
 
+import com.example.bonsai_shop.entity.User;
+import com.example.bonsai_shop.repository.user.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
+
+    private final UserRepository userRepository;
 
     @GetMapping("/home")
     public String home(Model model,
                        @AuthenticationPrincipal UserDetails userDetails) {
+
         if (userDetails != null) {
-            model.addAttribute("email", userDetails.getUsername());
+            String email = userDetails.getUsername();
+
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy user"));
+
+            model.addAttribute("username", user.getUsername());
+            model.addAttribute("email", user.getEmail());
         }
-        return "/home"; // templates/user/home.html
+
+        return "home";
     }
 }

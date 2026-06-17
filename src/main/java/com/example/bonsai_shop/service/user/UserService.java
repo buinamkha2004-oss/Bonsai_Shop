@@ -26,7 +26,7 @@ public class UserService {
 
     // ===== ĐĂNG KÝ =====
     @Transactional
-    public void register(String fullName, String email, String password, String phone) {
+    public void register(String fullName, String username, String email, String password, String phone) {
         if (userRepository.existsByEmail(email)) {
             throw new RuntimeException("Email đã được sử dụng!");
         }
@@ -34,6 +34,7 @@ public class UserService {
         // Lưu user với status PENDING
         User user = User.builder()
                 .fullName(fullName)
+                .username(username)
                 .email(email)
                 .password(passwordEncoder.encode(password))
                 .phone(phone)

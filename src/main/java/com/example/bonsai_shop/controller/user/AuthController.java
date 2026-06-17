@@ -38,12 +38,13 @@ public class AuthController {
 
     @PostMapping("/register")
     public String register(@RequestParam String fullName,
+                           @RequestParam String username,
                            @RequestParam String email,
                            @RequestParam String password,
                            @RequestParam String phone,
                            Model model) {
         try {
-            userService.register(fullName, email, password, phone);
+            userService.register(fullName, username, email, password, phone);
             model.addAttribute("email", email); // ← truyền email sang verify-otp
             model.addAttribute("success", "Mã OTP đã được gửi đến " + email);
             return "/user/verify-otp";

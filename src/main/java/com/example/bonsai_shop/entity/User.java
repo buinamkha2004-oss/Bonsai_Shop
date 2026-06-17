@@ -1,7 +1,6 @@
 package com.example.bonsai_shop.entity;
 
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.Order;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +18,9 @@ public class User {
     @Column(name = "FullName", nullable = false, length = 255)
     private String fullName;
 
+    @Column(name = "Username", unique = true, length = 255)
+    private String username;
+
     @Column(name = "Email", nullable = false, unique = true, length = 255)
     private String email;
 
@@ -35,7 +37,7 @@ public class User {
     private String address;
 
     @Column(name = "Status", length = 50)
-    private String status = "ACTIVE";
+    private String status = "PENDING";
 
     @Column(name = "CreatedAt")
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -43,15 +45,18 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserRole> userRoles;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<BonsaiOrder> orders;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Review> reviews;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Wishlist> wishlists;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     private Cart cart;
+
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
+    private List<Product> productsSold;
 }

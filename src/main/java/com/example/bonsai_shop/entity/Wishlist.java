@@ -13,8 +13,8 @@ public class Wishlist implements Serializable {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "UserID", nullable = false)
-    private User user;
+    @JoinColumn(name = "CustomerID", nullable = false)
+    private User customer;
 
     @Id
     @ManyToOne

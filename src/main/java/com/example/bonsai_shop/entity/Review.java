@@ -15,8 +15,8 @@ public class Review {
     private Integer reviewId;
 
     @ManyToOne
-    @JoinColumn(name = "UserID", nullable = false)
-    private User user;
+    @JoinColumn(name = "CustomerID", nullable = false)
+    private User customer;
 
     @ManyToOne
     @JoinColumn(name = "ProductID", nullable = false)

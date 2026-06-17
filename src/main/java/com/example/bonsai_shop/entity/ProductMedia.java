@@ -30,7 +30,7 @@ public class ProductMedia {
     private String caption;
 
     @Column(name = "IsThumbnail")
-    private Boolean isThumbnail = false;
+    private Boolean isThumbnail = true;
 
     @Column(name = "DisplayOrder")
     private Integer displayOrder = 0;

@@ -17,8 +17,8 @@ public class BonsaiOrder {
     private Integer orderId;
 
     @ManyToOne
-    @JoinColumn(name = "UserID", nullable = false)
-    private User user;
+    @JoinColumn(name = "CustomerID")
+    private User customer;
 
     @Column(name = "OrderCode", nullable = false, unique = true, length = 100)
     private String orderCode;
@@ -52,4 +52,10 @@ public class BonsaiOrder {
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Payment payment;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderLog> orderLogs;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderHandling> orderHandlings;
 }

@@ -15,8 +15,8 @@ public class ViewingAppointment {
     private Integer appointmentId;
 
     @ManyToOne
-    @JoinColumn(name = "UserID", nullable = false)
-    private User user;
+    @JoinColumn(name = "CustomerID", nullable = false)
+    private User customer;
 
     @ManyToOne
     @JoinColumn(name = "ProductID", nullable = false)
@@ -24,6 +24,12 @@ public class ViewingAppointment {
 
     @Column(name = "AppointmentDate", nullable = false)
     private LocalDateTime appointmentDate;
+
+    @Column(name = "CreatedAt")
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "UpdatedAt")
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @Column(name = "Note", length = 500)
     private String note;
