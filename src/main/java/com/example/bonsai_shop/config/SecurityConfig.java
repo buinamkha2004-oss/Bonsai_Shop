@@ -38,6 +38,7 @@ public class SecurityConfig {
                                 "/reset-password",
                                 "/verify-otp-to-reset-password",
                                 "/resend-otp-reset",
+                                "/avatars/**",  // ← cho phép xem ảnh avatar
                                 "/css/**",      // ← cho phép CSS
                                 "/js/**",       // ← cho phép JS
                                 "/images/**"    // ← cho phép images

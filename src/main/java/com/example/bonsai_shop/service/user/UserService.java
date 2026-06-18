@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -163,4 +164,62 @@ public class UserService {
         // Xóa OTP sau khi đổi mật khẩu xong
         otpRepository.deleteByEmail(email);
     }
+
+    public User getCurrentUserProfile(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy user!"));
+    }
+
+    private final FileStorageService fileStorageService;
+
+    @Transactional
+    public void updateUserProfile(String email, String fullName, String username, String phone,
+                                  String address, String avatar, MultipartFile avatarFile) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy user!"));
+
+        // Chỉ cập nhật field nào có giá trị (không null)
+        if (fullName != null) {
+            user.setFullName(fullName);
+        }
+        if (username != null) {
+            user.setUsername(username);
+        }
+        if (phone != null) {
+            user.setPhone(phone);
+        }
+        if (address != null) {
+            user.setAddress(address);
+        }
+
+        // Chỉ xử lý avatar nếu có file thực sự được upload
+        if (avatarFile != null && !avatarFile.isEmpty()) {
+            String avatarPath = fileStorageService.storeAvatar(avatarFile);
+            user.setAvatar(avatarPath);
+        }
+
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void changePassword(String email, String oldPassword, String newPassword, String confirmPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Email không tồn tại!"));
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new RuntimeException("Mật khẩu cũ không đúng!");
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            throw new RuntimeException("Mật khẩu xác nhận không khớp!");
+        }
+
+        if (newPassword.length() < 6) {
+            throw new RuntimeException("Mật khẩu phải có ít nhất 6 ký tự!");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
 }

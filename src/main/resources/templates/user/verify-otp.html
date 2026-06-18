@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
     <meta charset="UTF-8">
     <title>Xác nhận OTP - Bonsai Shop</title>
@@ -23,9 +23,11 @@
 
         <div class="form-group">
             <label>🔢 Mã OTP (6 số)</label>
-            <input type="text" name="otpCode" placeholder="Nhập mã OTP"
-                   maxlength="6" required
-                   style="letter-spacing: 8px; font-size: 22px; text-align:center;"/>
+            <label>
+                <input type="text" name="otpCode" placeholder="Nhập mã OTP"
+                       maxlength="6" required
+                       style="letter-spacing: 8px; font-size: 22px; text-align:center;"/>
+            </label>
         </div>
         <button type="submit" class="btn-login">Xác nhận OTP</button>
     </form>
