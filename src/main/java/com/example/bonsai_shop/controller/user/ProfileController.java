@@ -30,18 +30,25 @@ public class ProfileController {
         return "user/profile"; // templates/user/profile.html
     }
 
+    @GetMapping("/profile/update")
+    public String updateProfile(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+            String email = userDetails.getUsername();
+            User user = userService.getCurrentUserProfile(email);
+            model.addAttribute("user", user);
+            return "user/profile_update";
+    }
+
     @PostMapping("/profile/update")
     public String updateProfile(@AuthenticationPrincipal UserDetails userDetails,
                                 @RequestParam(required = false) String fullName,
                                 @RequestParam(required = false) String username,
                                 @RequestParam(required = false) String phone,
                                 @RequestParam(required = false) String address,
-                                @RequestParam(required = false) String avatar,
                                 @RequestParam(value = "avatarFile", required = false) MultipartFile avatarFile,
                                 Model model) {
         String email = userDetails.getUsername();
         try {
-            userService.updateUserProfile(email, fullName, username, phone, address, avatar, avatarFile);
+            userService.updateUserProfile(email, fullName, username, phone, address, avatarFile);
             User user = userService.getCurrentUserProfile(email);
             model.addAttribute("user", user);
             model.addAttribute("success", "Cập nhật thông tin thành công!");

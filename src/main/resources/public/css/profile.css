@@ -221,6 +221,17 @@ body {
 }
 .avatar-edit-icon:hover { background: #1b4332; }
 
+.btn-update{
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: #40916c;
+    color: white;
+    padding: 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+}
 .btn-change-password {
     display: block;
     width: 100%;

@@ -42,11 +42,12 @@ public class User {
     @Column(name = "CreatedAt")
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<UserRole> userRoles;
-
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<BonsaiOrder> orders;
+
+    @ManyToOne
+    @JoinColumn(name = "RoleID", nullable = false)
+    private Role role;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Review> reviews;

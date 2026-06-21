@@ -2,7 +2,6 @@ package com.example.bonsai_shop.service.user;
 
 import com.example.bonsai_shop.entity.User;
 import com.example.bonsai_shop.repository.user.UserRepository;
-import com.example.bonsai_shop.repository.user.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
@@ -15,22 +14,21 @@ import java.util.stream.Collectors;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final UserRoleRepository userRoleRepository;
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy email: " + email));
 
-        // Chặn user chưa kích hoạt
         if ("PENDING".equals(user.getStatus())) {
             throw new UsernameNotFoundException("Tài khoản chưa được xác thực email!");
         }
 
-        List<SimpleGrantedAuthority> authorities = userRoleRepository.findByUser(user)
-                .stream()
-                .map(userRole -> new SimpleGrantedAuthority(userRole.getRole().getRoleName()))
-                .collect(Collectors.toList());
+        // [v4.0]: Lấy role trực tiếp từ user.getRole(), không cần query UserRole nữa
+        List<SimpleGrantedAuthority> authorities = List.of(
+                new SimpleGrantedAuthority(user.getRole().getRoleName())
+        );
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),

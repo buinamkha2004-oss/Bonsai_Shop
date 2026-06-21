@@ -3,11 +3,9 @@ package com.example.bonsai_shop.service.user;
 import com.example.bonsai_shop.entity.PasswordResetOtp;
 import com.example.bonsai_shop.entity.Role;
 import com.example.bonsai_shop.entity.User;
-import com.example.bonsai_shop.entity.UserRole;
 import com.example.bonsai_shop.repository.user.RegisterOtpRepository;
 import com.example.bonsai_shop.repository.user.RoleRepository;
 import com.example.bonsai_shop.repository.user.UserRepository;
-import com.example.bonsai_shop.repository.user.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,8 +20,10 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
+    private final FileStorageService fileStorageService;
+    private final RegisterOtpRepository otpRepository;
 
     // ===== ĐĂNG KÝ =====
     @Transactional
@@ -32,6 +32,10 @@ public class UserService {
             throw new RuntimeException("Email đã được sử dụng!");
         }
 
+        // Lấy role mặc định
+        Role role = roleRepository.findByRoleName("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("Role không tồn tại!"));
+
         // Lưu user với status PENDING
         User user = User.builder()
                 .fullName(fullName)
@@ -39,21 +43,12 @@ public class UserService {
                 .email(email)
                 .password(passwordEncoder.encode(password))
                 .phone(phone)
+                .role(role)
                 .status("PENDING") // ← chưa kích hoạt
                 .createdAt(LocalDateTime.now())
                 .build();
 
         userRepository.save(user);
-
-        // Gán role USER
-        Role role = roleRepository.findByRoleName("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("Role không tồn tại!"));
-        UserRole userRole = UserRole.builder()
-                .user(user)
-                .role(role)
-                .assignedAt(LocalDateTime.now())
-                .build();
-        userRoleRepository.save(userRole);
 
         // Gửi OTP xác thực email
         sendOtp(email);
@@ -73,35 +68,66 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy user!"));
     }
 
-    private final RegisterOtpRepository otpRepository;
-    private final EmailService emailService;
 
-    // ===== GỬI OTP Để Đăng Ký=====
+    public User getCurrentUserProfile(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy user!"));
+    }
+
+    @Transactional
+    public void updateUserProfile(String email, String fullName, String username, String phone,
+                                  String address, MultipartFile avatarFile) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy user!"));
+
+        if (fullName != null) user.setFullName(fullName);
+        if (username != null) user.setUsername(username);
+        if (phone != null) user.setPhone(phone);
+        if (address != null) user.setAddress(address);
+
+        if (avatarFile != null && !avatarFile.isEmpty()) {
+            String avatarPath = fileStorageService.storeAvatar(avatarFile);
+            user.setAvatar(avatarPath);
+        }
+
+        userRepository.save(user);
+    }
+
+    // ===== OTP =====
     @Transactional
     public void sendOtp(String email) {
-        // Kiểm tra email tồn tại
-        userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Email không tồn tại trong hệ thống!"));
-
-        // Xóa OTP cũ
         otpRepository.deleteByEmail(email);
 
-        // Tạo OTP 6 số
         String otpCode = String.format("%06d", new java.util.Random().nextInt(999999));
 
-        // Lưu OTP vào database
         PasswordResetOtp otp = PasswordResetOtp.builder()
                 .email(email)
                 .otpCode(otpCode)
-                .expiredAt(LocalDateTime.now().plusMinutes(5)) // hết hạn sau 5 phút
+                .expiredAt(LocalDateTime.now().plusMinutes(5))
                 .isUsed(false)
                 .createdAt(LocalDateTime.now())
                 .build();
 
         otpRepository.save(otp);
-
-        // Gửi email
         emailService.sendOtpEmail(email, otpCode);
+    }
+
+    public void verifyOtp(String email, String otpCode) {
+        PasswordResetOtp otp = otpRepository.findTopByEmailOrderByCreatedAtDesc(email)
+                .orElseThrow(() -> new RuntimeException("OTP không tồn tại!"));
+
+        if (otp.getIsUsed()) {
+            throw new RuntimeException("OTP đã được sử dụng!");
+        }
+        if (otp.getExpiredAt().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("OTP đã hết hạn!");
+        }
+        if (!otp.getOtpCode().equals(otpCode)) {
+            throw new RuntimeException("OTP không đúng!");
+        }
+
+        otp.setIsUsed(true);
+        otpRepository.save(otp);
     }
 
     //    GỬI OTP để đặt lại mật khẩu
@@ -132,73 +158,15 @@ public class UserService {
         emailService.sendOtpResetPassword(email, otpCode);
     }
 
-    // ===== XÁC NHẬN OTP =====
-    public void verifyOtp(String email, String otpCode) {
-        PasswordResetOtp otp = otpRepository.findTopByEmailOrderByCreatedAtDesc(email)
-                .orElseThrow(() -> new RuntimeException("OTP không tồn tại!"));
 
-        if (otp.getIsUsed()) {
-            throw new RuntimeException("OTP đã được sử dụng!");
-        }
-        if (otp.getExpiredAt().isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("OTP đã hết hạn!");
-        }
-        if (!otp.getOtpCode().equals(otpCode)) {
-            throw new RuntimeException("OTP không đúng!");
-        }
-
-        // Đánh dấu OTP đã dùng
-        otp.setIsUsed(true);
-        otpRepository.save(otp);
-    }
-
-
-    // ===== ĐẶT LẠI MẬT KHẨU =====
+    @Transactional
     public void resetPassword(String email, String newPassword) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Email không tồn tại!"));
 
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-
-        // Xóa OTP sau khi đổi mật khẩu xong
         otpRepository.deleteByEmail(email);
-    }
-
-    public User getCurrentUserProfile(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy user!"));
-    }
-
-    private final FileStorageService fileStorageService;
-
-    @Transactional
-    public void updateUserProfile(String email, String fullName, String username, String phone,
-                                  String address, String avatar, MultipartFile avatarFile) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy user!"));
-
-        // Chỉ cập nhật field nào có giá trị (không null)
-        if (fullName != null) {
-            user.setFullName(fullName);
-        }
-        if (username != null) {
-            user.setUsername(username);
-        }
-        if (phone != null) {
-            user.setPhone(phone);
-        }
-        if (address != null) {
-            user.setAddress(address);
-        }
-
-        // Chỉ xử lý avatar nếu có file thực sự được upload
-        if (avatarFile != null && !avatarFile.isEmpty()) {
-            String avatarPath = fileStorageService.storeAvatar(avatarFile);
-            user.setAvatar(avatarPath);
-        }
-
-        userRepository.save(user);
     }
 
     @Transactional

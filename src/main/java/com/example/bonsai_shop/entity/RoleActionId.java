@@ -4,7 +4,7 @@ import lombok.*;
 import java.io.Serializable;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @EqualsAndHashCode
-public class UserRoleId implements Serializable {
-    private Integer user;
+public class RoleActionId implements Serializable {
     private Integer role;
+    private Integer action;
 }

@@ -22,13 +22,12 @@ public class OrderHandling {
     @JoinColumn(name = "ModeratorOrderID")
     private User moderator;
 
-    @Column(name = "HandleAt")
-    private LocalDateTime handleAt = LocalDateTime.now();
+    @Column(name = "HandledAt")
+    private LocalDateTime handledAt = LocalDateTime.now();
 
-    @Column(name = "ResolvedAt")
-    private LocalDateTime resolvedAt;
+    @Column(name = "ReleasedAt")
+    private LocalDateTime releasedAt;
 
     @Column(name = "IsActive")
     private Boolean isActive = true;
 }
-
