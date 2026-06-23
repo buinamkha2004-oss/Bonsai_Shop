@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSMS - Bonsai Marketplace</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        :root {
+            --bsms-primary: #1E4620;
+            --bsms-accent: #8B5A2B;
+            --bsms-bg: #FDFBF7;
+            --bsms-text-dark: #2B2B2B;
+            --bsms-text-muted: #6C757D;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bsms-bg);
+            color: var(--bsms-text-dark);
+        }
+
+        .serif-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Navbar Customization */
+        .navbar {
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+        .nav-link.active-custom {
+            color: var(--bsms-primary) !important;
+            font-weight: 600;
+            border-bottom: 2px solid var(--bsms-primary);
+        }
+        .btn-success-custom {
+            background-color: var(--bsms-primary);
+            color: white;
+            border: none;
+        }
+        .btn-success-custom:hover {
+            background-color: #153216;
+            color: white;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(rgba(253, 251, 247, 0.85), rgba(253, 251, 247, 0.85)),
+            url('https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&q=80&w=1600') no-repeat center center;
+            background-size: cover;
+            padding: 100px 0;
+        }
+
+        /* Nav Pills Custom */
+        .nav-pills .nav-link-custom {
+            color: var(--bsms-text-dark);
+            border: 1px solid #dee2e6;
+            margin: 0 5px;
+            border-radius: 50px;
+            background: #white;
+        }
+        .nav-pills .nav-link-custom.active {
+            background-color: var(--bsms-primary) !important;
+            color: white !important;
+            border-color: var(--bsms-primary);
+        }
+
+        /* Product Cards */
+        .bonsai-card {
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            background: #fff;
+        }
+        .bonsai-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+        }
+        .card-img-container {
+            position: relative;
+            background-color: #f8f9fa;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+        }
+        .card-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .wishlist-icon {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bsms-text-muted);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .wishlist-icon:hover {
+            color: #dc3545;
+        }
+        .status-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center fw-bold text-success fs-3 serif-font" href="#">
+            <i class="fa-solid fa-seedling me-2" style="color: var(--bsms-primary);"></i>BSMS
+        </a>
+        <button class="navbar-toggler" type="text-toggle" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-4">
+                <li class="nav-item"><a class="nav-link px-3" href="#">Home</a></li>
+                <li class="nav-item"><a class="nav-link px-3 active-custom" href="#">Bonsai Marketplace</a></li>
+                <li class="nav-item"><a class="nav-link px-3" href="#">Community</a></li>
+                <li class="nav-item"><a class="nav-link px-3" href="#">VIP Elite Showroom</a></li>
+                <li class="nav-item"><a class="nav-link px-3" href="#">Contact</a></li>
+            </ul>
+
+            <div class="d-flex align-items-center gap-3 w-25 me-3">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" placeholder="Tìm kiếm mã hoặc tên cây...">
+                    <span class="input-group-text bg-white border-start-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <a href="#" class="btn btn-link text-decoration-none text-dark p-0">Sign In</a>
+                <a href="#" class="btn btn-success-custom btn-sm px-3 rounded">Register</a>
+                <a href="#" class="position-relative text-dark ms-2">
+                    <i class="fa-solid fa-bag-shopping fs-5"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">0</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<header class="hero-banner text-center">
+    <div class="container">
+        <span class="badge bg-white text-dark border border-secondary-subtle px-3 py-2 rounded-pill mb-3 shadow-sm font-monospace">Bộ sưu tập cố định giá • Phả hệ minh bạch</span>
+        <h1 class="display-5 fw-bold serif-font text-dark mb-3">Sở Hữu Tác Phẩm Cây Cảnh Nghệ Thuật Cố Định Giá</h1>
+        <p class="lead text-secondary mx-auto mb-4" style="max-width: 750px;">
+            Mỗi tác phẩm là một di sản có hồ sơ phả hệ rõ ràng, được tuyển chọn từ nhà vườn nghệ nhân Bắc Bộ. Vận chuyển chuyên dụng có cẩu cho cây cỡ lớn.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <button class="btn btn-success-custom btn-lg px-4 fs-6 shadow-sm">Khám phá bộ sưu tập</button>
+            <button class="btn btn-outline-dark btn-lg px-4 fs-6 shadow-sm">Xem theo phân loại</button>
+        </div>
+    </div>
+</header>
+
+<div class="container my-5">
+    <div class="nav nav-pills justify-content-center">
+        <a href="#" class="nav-link nav-link-custom active shadow-sm px-4 py-2">All Bonsai Trees</a>
+        <a href="#" class="nav-link nav-link-custom shadow-sm px-4 py-2">Popular Picks</a>
+        <a href="#" class="nav-link nav-link-custom shadow-sm px-4 py-2">Affordable Trees (Budget)</a>
+        <a href="#" class="nav-link nav-link-custom shadow-sm px-4 py-2">Mid-range Trees</a>
+    </div>
+</div>
+
+<main class="container pb-5">
+    <div class="row">
+
+        <aside class="col-lg-3 col-md-4 mb-4">
+            <div class="bg-white p-4 rounded border shadow-sm position-sticky" style="top: 90px;">
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                    <h5 class="fw-bold m-0"><i class="fa-solid fa-sliders me-2"></i>Bộ lọc nâng cao</h5>
+                    <a href="#" class="text-decoration-none text-muted small"><i class="fa-solid fa-rotate-left me-1"></i>Xoá</a>
+                </div>
+
+                <div class="mb-4">
+                    <label class="fw-semibold text-secondary small mb-2 d-block text-uppercase tracking-wider">Loài cây (Species)</label>
+                    <div class="form-check mb-1"><input class="form-check-input" type="checkbox" id="sp1" checked><label class="form-check-label small" for="sp1">Sanh Nam Điền</label></div>
+                    <div class="form-check mb-1"><input class="form-check-input" type="checkbox" id="sp2"><label class="form-check-label small" for="sp2">Sanh Quê</label></div>
+                    <div class="form-check mb-1"><input class="form-check-input" type="checkbox" id="sp3"><label class="form-check-label small" for="sp3">Tùng La Hán</label></div>
+                    <div class="form-check mb-1"><input class="form-check-input" type="checkbox" id="sp4"><label class="form-check-label small" for="sp4">Linh Sam</label></div>
+                    <div class="form-check mb-1"><input class="form-check-input" type="checkbox" id="sp5"><label class="form-check-label small" for="sp5">Mai Chiếu Thủy</label></div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="fw-semibold text-secondary small mb-2 d-block text-uppercase tracking-wider">Thế dáng (Style)</label>
+                    <div class="form-check mb-1"><input class="form-check-input" type="checkbox" id="st1"><label class="form-check-label small" for="st1">Dáng Trực</label></div>
+                    <div class="form-check mb-1"><input class="form-check-input" type="checkbox" id="st2"><label class="form-check-label small" for="st2">Dáng Hoành</label></div>
+                    <div class="form-check mb-1"><input class="form-check-input" type="checkbox" id="st3"><label class="form-check-label small" for="st3">Dáng Huyền</label></div>
+                    <div class="form-check mb-1"><input class="form-check-input" type="checkbox" id="st4"><label class="form-check-label small" for="st4">Dáng Xiên</label></div>
+                    <div class="form-check mb-1"><input class="form-check-input" type="checkbox" id="st5"><label class="form-check-label small" for="st5">Dáng Song Thụ</label></div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="fw-semibold text-secondary small mb-2 d-block text-uppercase tracking-wider">Khoảng giá (Price)</label>
+                    <input type="range" class="form-range" min="500000" max="20000000" step="500000" id="priceRange">
+                    <div class="d-flex justify-content-between mt-2">
+                        <span class="badge bg-light text-dark border p-2">500.000 đ</span>
+                        <span class="badge bg-light text-dark border p-2">20.000.000 đ</span>
+                    </div>
+                </div>
+
+                <div class="form-check form-switch mb-4">
+                    <input class="form-check-input" type="checkbox" role="switch" id="availableOnly" checked>
+                    <label class="form-check-label small fw-medium text-success" for="availableOnly">• Chỉ hiển thị AVAILABLE</label>
+                </div>
+
+                <button class="btn btn-success-custom w-100 py-2 rounded shadow-sm fw-medium">Áp dụng bộ lọc</button>
+            </div>
+        </aside>
+
+        <section class="col-lg-9 col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <span class="text-muted small fw-medium">Hiển thị 8 tác phẩm nghệ thuật</span>
+                <div class="d-flex align-items-center gap-2">
+                    <label class="small text-nowrap text-muted" for="sortSelect">Sắp xếp:</label>
+                    <select class="form-select form-select-sm border-light-subtle shadow-sm" id="sortSelect" style="width: 150px;">
+                        <option selected>Nổi bật</option>
+                        <option>Giá thấp đến cao</option>
+                        <option>Giá cao đến thấp</option>
+                        <option>Tuổi cây lớn nhất</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-4">
+
+                <div class="col">
+                    <div class="card h-100 bonsai-card shadow-sm">
+                        <div class="card-img-container">
+                            <span class="status-badge bg-success text-white">AVAILABLE</span>
+                            <div class="wishlist-icon"><i class="fa-regular fa-heart"></i></div>
+                            <img src="https://images.unsplash.com/photo-1512428813824-f713c2411af5?auto=format&fit=crop&q=80&w=600" alt="Bonsai 1">
+                        </div>
+                        <div class="card-body pt-3 pb-2">
+                            <h6 class="card-title serif-font fw-bold text-truncate mb-1">Sanh Nam Điền Dáng Trực Cổ</h6>
+                            <p class="text-muted font-monospace mb-2" style="font-size: 0.75rem;">Mã: BSMS-SND-102</p>
+                            <p class="card-text text-secondary mb-0" style="font-size: 0.8rem;">
+                                <i class="fa-solid fa-hourglass-start me-1"></i>12 năm • <i class="fa-solid fa-arrows-up-down me-1"></i>65cm • <i class="fa-solid fa-circle-dot me-1"></i>15cm
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0 pb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-success fs-5">4.500.000 đ</span>
+                                <span class="text-warning small fw-semibold">4.8 <i class="fa-solid fa-star"></i></span>
+                            </div>
+                            <button class="btn btn-outline-success btn-sm w-100 mb-2 py-1"><i class="fa-solid fa-cart-plus me-1"></i>Add to Cart</button>
+                            <a href="#" class="text-center d-block small text-decoration-none text-muted">View Details →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100 bonsai-card shadow-sm">
+                        <div class="card-img-container">
+                            <span class="status-badge bg-success text-white">AVAILABLE</span>
+                            <div class="wishlist-icon"><i class="fa-regular fa-heart"></i></div>
+                            <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&q=80&w=600" alt="Bonsai 2">
+                        </div>
+                        <div class="card-body pt-3 pb-2">
+                            <h6 class="card-title serif-font fw-bold text-truncate mb-1">Tùng La Hán Dáng Hoành</h6>
+                            <p class="text-muted font-monospace mb-2" style="font-size: 0.75rem;">Mã: BSMS-TLH-258</p>
+                            <p class="card-text text-secondary mb-0" style="font-size: 0.8rem;">
+                                <i class="fa-solid fa-hourglass-start me-1"></i>14 năm • <i class="fa-solid fa-arrows-up-down me-1"></i>80cm • <i class="fa-solid fa-circle-dot me-1"></i>22cm
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0 pb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-success fs-5">8.900.000 đ</span>
+                                <span class="text-warning small fw-semibold">4.9 <i class="fa-solid fa-star"></i></span>
+                            </div>
+                            <button class="btn btn-outline-success btn-sm w-100 mb-2 py-1"><i class="fa-solid fa-cart-plus me-1"></i>Add to Cart</button>
+                            <a href="#" class="text-center d-block small text-decoration-none text-muted">View Details →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100 bonsai-card shadow-sm">
+                        <div class="card-img-container">
+                            <span class="status-badge bg-warning text-dark">RESERVED</span>
+                            <div class="wishlist-icon"><i class="fa-regular fa-heart"></i></div>
+                            <img src="https://images.unsplash.com/photo-1613143748830-1c69994b7911?auto=format&fit=crop&q=80&w=600" alt="Bonsai 3">
+                        </div>
+                        <div class="card-body pt-3 pb-2">
+                            <h6 class="card-title serif-font fw-bold text-truncate mb-1">Linh Sam Dáng Huyền</h6>
+                            <p class="text-muted font-monospace mb-2" style="font-size: 0.75rem;">Mã: BSMS-LSM-077</p>
+                            <p class="card-text text-secondary mb-0" style="font-size: 0.8rem;">
+                                <i class="fa-solid fa-hourglass-start me-1"></i>8 năm • <i class="fa-solid fa-arrows-up-down me-1"></i>55cm • <i class="fa-solid fa-circle-dot me-1"></i>11cm
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0 pb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-success fs-5">3.200.000 đ</span>
+                                <span class="text-warning small fw-semibold">4.7 <i class="fa-solid fa-star"></i></span>
+                            </div>
+                            <button class="btn btn-secondary btn-sm w-100 mb-2 py-1" disabled>Reserved</button>
+                            <a href="#" class="text-center d-block small text-decoration-none text-muted">View Details →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100 bonsai-card shadow-sm">
+                        <div class="card-img-container">
+                            <span class="status-badge bg-success text-white">AVAILABLE</span>
+                            <div class="wishlist-icon"><i class="fa-regular fa-heart"></i></div>
+                            <img src="https://images.unsplash.com/photo-1564594736624-def7a10ab047?auto=format&fit=crop&q=80&w=600" alt="Bonsai 4">
+                        </div>
+                        <div class="card-body pt-3 pb-2">
+                            <h6 class="card-title serif-font fw-bold text-truncate mb-1">Mai Chiếu Thủy Bonsai Hoa</h6>
+                            <p class="text-muted font-monospace mb-2" style="font-size: 0.75rem;">Mã: BSMS-MCT-145</p>
+                            <p class="card-text text-secondary mb-0" style="font-size: 0.8rem;">
+                                <i class="fa-solid fa-hourglass-start me-1"></i>14 năm • <i class="fa-solid fa-arrows-up-down me-1"></i>70cm • <i class="fa-solid fa-circle-dot me-1"></i>18cm
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0 pb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-success fs-5">6.700.000 đ</span>
+                                <span class="text-warning small fw-semibold">4.8 <i class="fa-solid fa-star"></i></span>
+                            </div>
+                            <button class="btn btn-outline-success btn-sm w-100 mb-2 py-1"><i class="fa-solid fa-cart-plus me-1"></i>Add to Cart</button>
+                            <a href="#" class="text-center d-block small text-decoration-none text-muted">View Details →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100 bonsai-card shadow-sm">
+                        <div class="card-img-container">
+                            <span class="status-badge bg-secondary text-white">SOLD</span>
+                            <div class="wishlist-icon"><i class="fa-regular fa-heart"></i></div>
+                            <img src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&q=80&w=600" alt="Bonsai 5">
+                        </div>
+                        <div class="card-body pt-3 pb-2">
+                            <h6 class="card-title serif-font fw-bold text-truncate mb-1">Sanh Quê Dáng Song Thụ</h6>
+                            <p class="text-muted font-monospace mb-2" style="font-size: 0.75rem;">Mã: BSMS-SQW-301</p>
+                            <p class="card-text text-secondary mb-0" style="font-size: 0.8rem;">
+                                <i class="fa-solid fa-hourglass-start me-1"></i>20 năm • <i class="fa-solid fa-arrows-up-down me-1"></i>95cm • <i class="fa-solid fa-circle-dot me-1"></i>29cm
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0 pb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-muted fs-5">12.500.000 đ</span>
+                                <span class="text-warning small fw-semibold">5.0 <i class="fa-solid fa-star"></i></span>
+                            </div>
+                            <button class="btn btn-dark btn-sm w-100 mb-2 py-1" disabled>Sold</button>
+                            <a href="#" class="text-center d-block small text-decoration-none text-muted">View Details →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100 bonsai-card shadow-sm">
+                        <div class="card-img-container">
+                            <span class="status-badge bg-success text-white">AVAILABLE</span>
+                            <div class="wishlist-icon"><i class="fa-regular fa-heart"></i></div>
+                            <img src="https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&fit=crop&q=80&w=600" alt="Bonsai 6">
+                        </div>
+                        <div class="card-body pt-3 pb-2">
+                            <h6 class="card-title serif-font fw-bold text-truncate mb-1">Tùng Cối Dáng Xiên</h6>
+                            <p class="text-muted font-monospace mb-2" style="font-size: 0.75rem;">Mã: BSMS-TGC-080</p>
+                            <p class="card-text text-secondary mb-0" style="font-size: 0.8rem;">
+                                <i class="fa-solid fa-hourglass-start me-1"></i>11 năm • <i class="fa-solid fa-arrows-up-down me-1"></i>60cm • <i class="fa-solid fa-circle-dot me-1"></i>13cm
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0 pb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-success fs-5">3.900.000 đ</span>
+                                <span class="text-warning small fw-semibold">4.6 <i class="fa-solid fa-star"></i></span>
+                            </div>
+                            <button class="btn btn-outline-success btn-sm w-100 mb-2 py-1"><i class="fa-solid fa-cart-plus me-1"></i>Add to Cart</button>
+                            <a href="#" class="text-center d-block small text-decoration-none text-muted">View Details →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100 bonsai-card shadow-sm">
+                        <div class="card-img-container">
+                            <span class="status-badge bg-success text-white">AVAILABLE</span>
+                            <div class="wishlist-icon"><i class="fa-regular fa-heart"></i></div>
+                            <img src="https://images.unsplash.com/photo-1515150144380-bca9f1650ed9?auto=format&fit=crop&q=80&w=600" alt="Bonsai 7">
+                        </div>
+                        <div class="card-body pt-3 pb-2">
+                            <h6 class="card-title serif-font fw-bold text-truncate mb-1">Sanh Hoành Bonsai Vườn</h6>
+                            <p class="text-muted font-monospace mb-2" style="font-size: 0.75rem;">Mã: BSMS-SNH-184</p>
+                            <p class="card-text text-secondary mb-0" style="font-size: 0.8rem;">
+                                <i class="fa-solid fa-hourglass-start me-1"></i>15 năm • <i class="fa-solid fa-arrows-up-down me-1"></i>75cm • <i class="fa-solid fa-circle-dot me-1"></i>17cm
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0 pb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-success fs-5">5.800.000 đ</span>
+                                <span class="text-warning small fw-semibold">4.7 <i class="fa-solid fa-star"></i></span>
+                            </div>
+                            <button class="btn btn-outline-success btn-sm w-100 mb-2 py-1"><i class="fa-solid fa-cart-plus me-1"></i>Add to Cart</button>
+                            <a href="#" class="text-center d-block small text-decoration-none text-muted">View Details →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100 bonsai-card shadow-sm">
+                        <div class="card-img-container">
+                            <span class="status-badge bg-success text-white">AVAILABLE</span>
+                            <div class="wishlist-icon"><i class="fa-regular fa-heart"></i></div>
+                            <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&q=80&w=600" alt="Bonsai 8">
+                        </div>
+                        <div class="card-body pt-3 pb-2">
+                            <h6 class="card-title serif-font fw-bold text-truncate mb-1">Mini Bonsai Để Bàn</h6>
+                            <p class="text-muted font-monospace mb-2" style="font-size: 0.75rem;">Mã: BSMS-MNB-009</p>
+                            <p class="card-text text-secondary mb-0" style="font-size: 0.8rem;">
+                                <i class="fa-solid fa-hourglass-start me-1"></i>4 năm • <i class="fa-solid fa-arrows-up-down me-1"></i>25cm • <i class="fa-solid fa-circle-dot me-1"></i>5cm
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0 pb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-bold text-success fs-5">950.000 đ</span>
+                                <span class="text-warning small fw-semibold">4.5 <i class="fa-solid fa-star"></i></span>
+                            </div>
+                            <button class="btn btn-outline-success btn-sm w-100 mb-2 py-1"><i class="fa-solid fa-cart-plus me-1"></i>Add to Cart</button>
+                            <a href="#" class="text-center d-block small text-decoration-none text-muted">View Details →</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <nav class="d-flex justify-content-center py-5">
+                <ul class="pagination">
+                    <li class="page-item disabled"><a class="page-link" href="#"><i class="fa-solid fa-chevron-left"></i></a></li>
+                    <li class="page-item active"><a class="page-link bg-success border-success text-white" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link text-dark" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link text-dark" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link href="#"><i class="fa-solid fa-chevron-right text-dark"></i></a></li>
+                </ul>
+            </nav>
+
+        </section>
+    </div>
+</main>
+
+<section class="bg-white border-top py-5">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-4 g-4 text-center">
+            <div class="col">
+                <div class="p-3">
+                    <i class="fa-solid fa-leaf text-success fs-2 mb-3" style="color: var(--bsms-primary);"></i>
+                    <h6 class="fw-bold">Authentic Bonsai</h6>
+                    <p class="text-muted small mb-0">Cây thật, ảnh thật — Cam kết hình ảnh chuẩn xác thực tế 100%.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="p-3">
+                    <i class="fa-solid fa-shield-halved text-success fs-2 mb-3" style="color: var(--bsms-primary);"></i>
+                    <h6 class="fw-bold">Verified Sellers</h6>
+                    <p class="text-muted small mb-0">Nhà vườn nghệ nhân uy tín Bắc Bộ có phả hệ minh bạch.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="p-3">
+                    <i class="fa-solid fa-credit-card text-success fs-2 mb-3" style="color: var(--bsms-primary);"></i>
+                    <h6 class="fw-bold">Secure Payment</h6>
+                    <p class="text-muted small mb-0">Tích hợp cổng thanh toán VNPay an toàn, bảo mật tuyệt đối.</p>
+                </div>
+            </div>
+            <div class="col">
+                <div class="p-3">
+                    <i class="fa-solid fa-truck-ramp-box text-success fs-2 mb-3" style="color: var(--bsms-primary);"></i>
+                    <h6 class="fw-bold">Delivery Support</h6>
+                    <p class="text-muted small mb-0">Vận chuyển chuyên dụng có cẩu cho các cây cỡ lớn, an toàn.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-5">
+                <h4 class="serif-font fw-bold text-white mb-3"><i class="fa-solid fa-seedling me-2"></i>BSMS</h4>
+                <p class="text-secondary small" style="max-width: 400px;">
+                    Nền tảng quản lý và giao dịch cây cảnh nghệ thuật — gìn giữ và phát huy di sản nghệ thuật bonsai Bắc Bộ Việt Nam.
+                </p>
+                <span class="text-muted small">© 2026 BSMS Project. All rights reserved.</span>
+            </div>
+            <div class="col-md-3 offset-md-1">
+                <h6 class="text-uppercase fw-bold text-white small mb-3">Company</h6>
+                <ul class="list-unstyled text-secondary small d-flex flex-column gap-2">
+                    <li><a href="#" class="text-decoration-none text-secondary">About Us</a></li>
+                    <li><a href="#" class="text-decoration-none text-secondary">Contact</a></li>
+                    <li><a href="#" class="text-decoration-none text-secondary">Terms of Service</a></li>
+                    <li><a href="#" class="text-decoration-none text-secondary">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h6 class="text-uppercase fw-bold text-white small mb-3">Connect</h6>
+                <ul class="list-unstyled text-secondary small d-flex flex-column gap-2">
+                    <li><i class="fa-solid fa-phone me-2"></i>Hotline: 1900-xxxx</li>
+                    <li><i class="fa-solid fa-envelope me-2"></i>Email: contact@bsms.vn</li>
+                    <li class="text-muted mt-2">Powered by VNPay & Crane Logistics</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
