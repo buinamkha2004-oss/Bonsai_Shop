@@ -1,6 +1,5 @@
 package com.example.bonsai_shop.controller.user;
 
-import com.example.bonsai_shop.entity.User;
 import com.example.bonsai_shop.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
