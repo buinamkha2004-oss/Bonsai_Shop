@@ -20,4 +20,8 @@ public class ProductService {
     public Page<Product> getAllActiveProducts(Pageable pageable) {
         return productRepository.findAllActiveProducts(pageable);
     }
+
+    public Page<Product> getAvailableProductsOnly(Pageable pageable) {
+        return productRepository.findAvailableProductsOnly(pageable);
+    }
 }

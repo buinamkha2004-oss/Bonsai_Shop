@@ -19,11 +19,22 @@ public class MarketplaceController {
     @GetMapping("/marketplace")
     public String marketplace(
             @RequestParam(defaultValue = "0") int page,
+            @RequestParam(name = "availableOnly", required = false) String availableOnly,
             Model model) {
-        Page<Product> products =
-                productService.getAllActiveProducts(
-                        PageRequest.of(page, 12));
+
+        boolean showAvailableOnly = "on".equals(availableOnly) || "true".equals(availableOnly);
+
+        Page<Product> products;
+        if (showAvailableOnly) {
+            products = productService.getAvailableProductsOnly(
+                    PageRequest.of(page, 12));
+        } else {
+            products = productService.getAllActiveProducts(
+                    PageRequest.of(page, 12));
+        }
+
         model.addAttribute("products", products);
+        model.addAttribute("availableOnly", showAvailableOnly);
         return "/product/marketplace";
     }
 }

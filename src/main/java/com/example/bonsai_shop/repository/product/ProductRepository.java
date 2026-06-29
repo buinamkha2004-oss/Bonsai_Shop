@@ -35,4 +35,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query("SELECT p FROM Product p JOIN FETCH p.variety JOIN FETCH p.seller WHERE p.isPublicPrice = true")
     Page<Product> findAllActiveProducts(Pageable pageable);
+
+    @Query("SELECT p FROM Product p JOIN FETCH p.variety JOIN FETCH p.seller WHERE p.isPublicPrice = true AND p.productStatus = 'AVAILABLE'")
+    Page<Product> findAvailableProductsOnly(Pageable pageable);
 }

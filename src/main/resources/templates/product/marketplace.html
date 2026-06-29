@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="vi">
 <head>
@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BSMS - Bonsai Marketplace</title>
     
-    <!-- Premium Fonts & Icons -->
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -308,7 +308,7 @@
         }
 
         /* --- FILTER SIDEBAR STYLES --- */
-        .filter-panel-premium {
+        .filter-panel {
             background-color: #FFFFFF;
             border: 1px solid var(--border-color);
             padding: 24px;
@@ -373,7 +373,7 @@
         }
 
         /* Custom Checkboxes */
-        .checkbox-label-premium {
+        .checkbox-label {
             display: block;
             position: relative;
             padding-left: 26px;
@@ -385,7 +385,7 @@
             transition: var(--transition);
         }
 
-        .checkbox-label-premium input {
+        .checkbox-label input {
             position: absolute;
             opacity: 0;
             cursor: pointer;
@@ -405,11 +405,11 @@
             transition: var(--transition);
         }
 
-        .checkbox-label-premium:hover input ~ .checkbox-checkmark {
+        .checkbox-label:hover input ~ .checkbox-checkmark {
             border-color: var(--accent-color);
         }
 
-        .checkbox-label-premium input:checked ~ .checkbox-checkmark {
+        .checkbox-label input:checked ~ .checkbox-checkmark {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
         }
@@ -420,11 +420,11 @@
             display: none;
         }
 
-        .checkbox-label-premium input:checked ~ .checkbox-checkmark:after {
+        .checkbox-label input:checked ~ .checkbox-checkmark:after {
             display: block;
         }
 
-        .checkbox-label-premium .checkbox-checkmark:after {
+        .checkbox-label .checkbox-checkmark:after {
             left: 4px;
             top: 1.5px;
             width: 5px;
@@ -490,7 +490,7 @@
             font-weight: 500;
         }
 
-        .btn-filter-apply-premium {
+        .btn-filter-apply {
             width: 100%;
             background-color: var(--primary-color);
             color: white;
@@ -505,12 +505,12 @@
             margin-top: 10px;
         }
 
-        .btn-filter-apply-premium:hover {
+        .btn-filter-apply:hover {
             background-color: var(--primary-hover);
         }
 
         /* --- PRODUCT CARD STYLES (4-Columns Layout Match) --- */
-        .product-card-premium {
+        .product-card {
             background-color: #FFFFFF;
             border: 1px solid var(--border-color);
             border-radius: 0;
@@ -522,7 +522,7 @@
             transition: var(--transition);
         }
 
-        .product-card-premium:hover {
+        .product-card:hover {
             box-shadow: var(--shadow-hover);
             border-color: rgba(28, 51, 34, 0.12);
         }
@@ -541,7 +541,7 @@
             transition: var(--transition);
         }
 
-        .product-card-premium:hover .card-img-asset {
+        .product-card:hover .card-img-asset {
             transform: scale(1.05);
         }
 
@@ -614,7 +614,7 @@
             transform: scale(1.08);
         }
 
-        .card-content-premium {
+        .card-content {
             padding: 16px;
             display: flex;
             flex-direction: column;
@@ -798,7 +798,7 @@
         }
 
         /* --- PAGINATION STYLES --- */
-        .pagination-bar-premium {
+        .pagination-bar {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -806,7 +806,7 @@
             margin-top: 45px;
         }
 
-        .page-arrow-premium {
+        .page-arrow {
             width: 32px;
             height: 32px;
             border: 1px solid var(--border-color);
@@ -820,18 +820,18 @@
             transition: var(--transition);
         }
 
-        .page-arrow-premium:hover {
+        .page-arrow:hover {
             border-color: var(--accent-color);
             color: var(--accent-color);
         }
 
-        .page-arrow-premium.disabled {
+        .page-arrow.disabled {
             color: var(--border-color);
             pointer-events: none;
             background-color: #FAFAFA;
         }
 
-        .page-num-premium {
+        .page-num {
             width: 32px;
             height: 32px;
             border: 1px solid var(--border-color);
@@ -846,12 +846,12 @@
             transition: var(--transition);
         }
 
-        .page-num-premium:hover {
+        .page-num:hover {
             border-color: var(--accent-color);
             color: var(--accent-color);
         }
 
-        .page-num-premium.active {
+        .page-num.active {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
             color: white;
@@ -907,7 +907,7 @@
         }
 
         /* --- FOOTER STYLES --- */
-        .footer-premium-dark {
+        .footer-dark {
             background-color: #121E15;      /* Rich Dark Pine / Charcoal Green */
             color: rgba(255, 255, 255, 0.7);
             padding: 70px 0 25px;
@@ -1059,7 +1059,7 @@
                 left: 0;
             }
 
-            .filter-panel-premium {
+            .filter-panel {
                 border: none;
                 height: 100%;
             }
@@ -1257,121 +1257,123 @@
         <!-- FILTER -->
         <!-- ===================================================== -->
         <aside class="col-lg-3 filter-sidebar-col" id="filterSidebar">
-            <div class="filter-panel-premium">
-                <div class="filter-panel-header">
-                    <h5 class="filter-panel-title">Bộ lọc nâng cao</h5>
-                    <!-- Button to close drawer on mobile -->
-                    <button class="btn-close d-lg-none close-filter-btn" id="mobileFilterCloseBtn" aria-label="Close"></button>
-                    <a href="#" class="filter-panel-clear-link">Xoá</a>
-                </div>
-
-                <!-- Species Checklist -->
-                <div class="filter-block">
-                    <div class="filter-block-title">
-                        Loài cây (Species)
-                        <i class="fa-solid fa-chevron-up"></i>
+            <form method="get" action="/marketplace" id="filterForm">
+                <div class="filter-panel">
+                    <div class="filter-panel-header">
+                        <h5 class="filter-panel-title">Bộ lọc nâng cao</h5>
+                        <!-- Button to close drawer on mobile -->
+                        <button type="button" class="btn-close d-lg-none close-filter-btn" id="mobileFilterCloseBtn" aria-label="Close"></button>
+                        <a href="/marketplace" class="filter-panel-clear-link">Xoá</a>
                     </div>
-                    <div class="filter-block-content">
-                        <label class="checkbox-label-premium">
-                            Sanh Nam Điền
-                            <input type="checkbox" checked>
-                            <span class="checkbox-checkmark"></span>
-                        </label>
-                        <label class="checkbox-label-premium">
-                            Sanh Quê
-                            <input type="checkbox">
-                            <span class="checkbox-checkmark"></span>
-                        </label>
-                        <label class="checkbox-label-premium">
-                            Tùng La Hán
-                            <input type="checkbox">
-                            <span class="checkbox-checkmark"></span>
-                        </label>
-                        <label class="checkbox-label-premium">
-                            Linh Sam
-                            <input type="checkbox">
-                            <span class="checkbox-checkmark"></span>
-                        </label>
-                        <label class="checkbox-label-premium">
-                            Mai Chiếu Thủy
-                            <input type="checkbox">
-                            <span class="checkbox-checkmark"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Style Checklist -->
-                <div class="filter-block">
-                    <div class="filter-block-title">
-                        Thế dáng (Style)
-                        <i class="fa-solid fa-chevron-up"></i>
-                    </div>
-                    <div class="filter-block-content">
-                        <label class="checkbox-label-premium">
-                            Dáng Trực
-                            <input type="checkbox">
-                            <span class="checkbox-checkmark"></span>
-                        </label>
-                        <label class="checkbox-label-premium">
-                            Dáng Hoành
-                            <input type="checkbox">
-                            <span class="checkbox-checkmark"></span>
-                        </label>
-                        <label class="checkbox-label-premium">
-                            Dáng Huyền
-                            <input type="checkbox">
-                            <span class="checkbox-checkmark"></span>
-                        </label>
-                        <label class="checkbox-label-premium">
-                            Dáng Xiên
-                            <input type="checkbox">
-                            <span class="checkbox-checkmark"></span>
-                        </label>
-                        <label class="checkbox-label-premium">
-                            Dáng Song Thụ
-                            <input type="checkbox">
-                            <span class="checkbox-checkmark"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Age Collapsed Accordion -->
-                <div class="filter-block">
-                    <div class="filter-block-title">
-                        Tuổi cây (Age)
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </div>
-                </div>
-
-                <!-- Price Slider Range -->
-                <div class="filter-block">
-                    <div class="filter-block-title">
-                        Khoảng giá
-                        <i class="fa-solid fa-chevron-up"></i>
-                    </div>
-                    <div class="filter-block-content range-slider-wrap">
-                        <input type="range" class="price-slider-input" min="500000" max="20000000" step="500000" id="priceRangeSlider" value="20000000">
-                        <div class="range-vals">
-                            <span>500.000 đ</span>
-                            <span id="priceRangeMaxVal" style="color: var(--primary-color); font-weight:700;">20.000.000 đ</span>
+    
+                    <!-- Species Checklist -->
+                    <div class="filter-block">
+                        <div class="filter-block-title">
+                            Loài cây (Species)
+                            <i class="fa-solid fa-chevron-up"></i>
+                        </div>
+                        <div class="filter-block-content">
+                            <label class="checkbox-label">
+                                Sanh Nam Điền
+                                <input type="checkbox" checked>
+                                <span class="checkbox-checkmark"></span>
+                            </label>
+                            <label class="checkbox-label">
+                                Sanh Quê
+                                <input type="checkbox">
+                                <span class="checkbox-checkmark"></span>
+                            </label>
+                            <label class="checkbox-label">
+                                Tùng La Hán
+                                <input type="checkbox">
+                                <span class="checkbox-checkmark"></span>
+                            </label>
+                            <label class="checkbox-label">
+                                Linh Sam
+                                <input type="checkbox">
+                                <span class="checkbox-checkmark"></span>
+                            </label>
+                            <label class="checkbox-label">
+                                Mai Chiếu Thủy
+                                <input type="checkbox">
+                                <span class="checkbox-checkmark"></span>
+                            </label>
                         </div>
                     </div>
-                </div>
-
-                <!-- Available Toggle Switch -->
-                <div class="filter-block">
-                    <div class="filter-block-content">
-                        <label class="indicator-label-wrap">
-                            <input type="checkbox" checked style="accent-color: var(--primary-color);">
-                            <span class="status-dot-green"></span>
-                            Chỉ hiển thị AVAILABLE
-                        </label>
+    
+                    <!-- Style Checklist -->
+                    <div class="filter-block">
+                        <div class="filter-block-title">
+                            Thế dáng (Style)
+                            <i class="fa-solid fa-chevron-up"></i>
+                        </div>
+                        <div class="filter-block-content">
+                            <label class="checkbox-label">
+                                Dáng Trực
+                                <input type="checkbox">
+                                <span class="checkbox-checkmark"></span>
+                            </label>
+                            <label class="checkbox-label">
+                                Dáng Hoành
+                                <input type="checkbox">
+                                <span class="checkbox-checkmark"></span>
+                            </label>
+                            <label class="checkbox-label">
+                                Dáng Huyền
+                                <input type="checkbox">
+                                <span class="checkbox-checkmark"></span>
+                            </label>
+                            <label class="checkbox-label">
+                                Dáng Xiên
+                                <input type="checkbox">
+                                <span class="checkbox-checkmark"></span>
+                            </label>
+                            <label class="checkbox-label">
+                                Dáng Song Thụ
+                                <input type="checkbox">
+                                <span class="checkbox-checkmark"></span>
+                            </label>
+                        </div>
                     </div>
+    
+                    <!-- Age Collapsed Accordion -->
+                    <div class="filter-block">
+                        <div class="filter-block-title">
+                            Tuổi cây (Age)
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                    </div>
+    
+                    <!-- Price Slider Range -->
+                    <div class="filter-block">
+                        <div class="filter-block-title">
+                            Khoảng giá
+                            <i class="fa-solid fa-chevron-up"></i>
+                        </div>
+                        <div class="filter-block-content range-slider-wrap">
+                            <input type="range" class="price-slider-input" min="500000" max="20000000" step="500000" id="priceRangeSlider" value="20000000">
+                            <div class="range-vals">
+                                <span>500.000 đ</span>
+                                <span id="priceRangeMaxVal" style="color: var(--primary-color); font-weight:700;">20.000.000 đ</span>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Available Toggle Switch -->
+                    <div class="filter-block">
+                        <div class="filter-block-content">
+                            <label class="indicator-label-wrap">
+                                <input type="checkbox" name="availableOnly" th:checked="${availableOnly}" style="accent-color: var(--primary-color);">
+                                <span class="status-dot-green"></span>
+                                Chỉ hiển thị AVAILABLE
+                            </label>
+                        </div>
+                    </div>
+    
+                    <!-- Filter Actions -->
+                    <button type="submit" class="btn-filter-apply">Áp dụng bộ lọc</button>
                 </div>
-
-                <!-- Filter Actions -->
-                <button class="btn-filter-apply-premium">Áp dụng bộ lọc</button>
-            </div>
+            </form>
         </aside>
 
         <!-- ===================================================== -->
@@ -1397,7 +1399,7 @@
 
                 <!-- DYNAMIC PRODUCT CARDS LOOP -->
                 <div class="col" th:each="product : ${products}">
-                    <div class="product-card-premium">
+                    <div class="product-card">
                         <div class="card-image-wrap">
                             <!-- Status Badge: Dynamically rendered based on ProductStatus -->
                             <span th:if="${product.productStatus == 'AVAILABLE'}" class="card-status-badge avail">AVAILABLE</span>
@@ -1425,7 +1427,7 @@
                                  th:alt="${product.productName}" class="card-img-asset">
                         </div>
                         
-                        <div class="card-content-premium">
+                        <div class="card-content">
                             <!-- Variety/Species binding -->
                             <span class="card-species-tag" th:text="${product.variety != null ? product.variety.varietyName : 'Bonsai'}">Sanh Nam Điền</span>
                             
@@ -1481,14 +1483,14 @@
             <!-- ===================================================== -->
             <!-- PAGINATION -->
             <!-- ===================================================== -->
-            <div class="pagination-bar-premium">
-                <a href="#" class="page-arrow-premium disabled"><i class="fa-solid fa-chevron-left"></i></a>
-                <a href="#" class="page-num-premium active">1</a>
-                <a href="#" class="page-num-premium">2</a>
-                <a href="#" class="page-num-premium">3</a>
-                <a href="#" class="page-num-premium">4</a>
-                <a href="#" class="page-num-premium">5</a>
-                <a href="#" class="page-arrow-premium"><i class="fa-solid fa-chevron-right"></i></a>
+            <div class="pagination-bar">
+                <a href="#" class="page-arrow disabled"><i class="fa-solid fa-chevron-left"></i></a>
+                <a href="#" class="page-num active">1</a>
+                <a href="#" class="page-num">2</a>
+                <a href="#" class="page-num">3</a>
+                <a href="#" class="page-num">4</a>
+                <a href="#" class="page-num">5</a>
+                <a href="#" class="page-arrow"><i class="fa-solid fa-chevron-right"></i></a>
             </div>
 
         </section>
@@ -1518,13 +1520,13 @@
                 
                 <!-- Best Sellers Card 1 -->
                 <div class="col">
-                    <div class="product-card-premium">
+                    <div class="product-card">
                         <div class="card-image-wrap">
                             <span class="card-status-badge avail">AVAILABLE</span>
                             <button class="card-btn-wishlist" title="Yêu thích"><i class="fa-regular fa-heart"></i></button>
                             <img src="https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&q=80&w=600" alt="Sanh Nam Điền Dáng Trực Cổ" class="card-img-asset">
                         </div>
-                        <div class="card-content-premium">
+                        <div class="card-content">
                             <span class="card-species-tag">Sanh Nam Điền</span>
                             <h3 class="card-title-serif">Sanh Nam Điền Dáng Trực Cổ</h3>
                             <p class="card-pedigree-code text-muted mb-1" style="font-size:0.7rem;">Mã: BSMS-SND-102</p>
@@ -1543,13 +1545,13 @@
 
                 <!-- Best Sellers Card 2 -->
                 <div class="col">
-                    <div class="product-card-premium">
+                    <div class="product-card">
                         <div class="card-image-wrap">
                             <span class="card-status-badge avail">AVAILABLE</span>
                             <button class="card-btn-wishlist" title="Yêu thích"><i class="fa-regular fa-heart"></i></button>
                             <img src="https://images.unsplash.com/photo-1515150144380-bca9f1650ed9?auto=format&fit=crop&q=80&w=600" alt="Tùng La Hán Dáng Hoành" class="card-img-asset">
                         </div>
-                        <div class="card-content-premium">
+                        <div class="card-content">
                             <span class="card-species-tag">Tùng La Hán</span>
                             <h3 class="card-title-serif">Tùng La Hán Dáng Hoành</h3>
                             <p class="card-pedigree-code text-muted mb-1" style="font-size:0.7rem;">Mã: BSMS-TLH-218</p>
@@ -1568,13 +1570,13 @@
 
                 <!-- Best Sellers Card 3 -->
                 <div class="col">
-                    <div class="product-card-premium">
+                    <div class="product-card">
                         <div class="card-image-wrap">
                             <span class="card-status-badge resv">RESERVED</span>
                             <button class="card-btn-wishlist" title="Yêu thích"><i class="fa-regular fa-heart"></i></button>
                             <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&q=80&w=600" alt="Linh Sam Dáng Huyền" class="card-img-asset">
                         </div>
-                        <div class="card-content-premium">
+                        <div class="card-content">
                             <span class="card-species-tag">Linh Sam</span>
                             <h3 class="card-title-serif">Linh Sam Dáng Huyền</h3>
                             <p class="card-pedigree-code text-muted mb-1" style="font-size:0.7rem;">Mã: BSMS-LSM-077</p>
@@ -1593,13 +1595,13 @@
 
                 <!-- Best Sellers Card 4 -->
                 <div class="col">
-                    <div class="product-card-premium">
+                    <div class="product-card">
                         <div class="card-image-wrap">
                             <span class="card-status-badge avail">AVAILABLE</span>
                             <button class="card-btn-wishlist" title="Yêu thích"><i class="fa-regular fa-heart"></i></button>
                             <img src="https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&fit=crop&q=80&w=600" alt="Mai Chiếu Thủy Bonsai Hoa" class="card-img-asset">
                         </div>
-                        <div class="card-content-premium">
+                        <div class="card-content">
                             <span class="card-species-tag">Mai Chiếu Thủy</span>
                             <h3 class="card-title-serif">Mai Chiếu Thủy Bonsai Hoa</h3>
                             <p class="card-pedigree-code text-muted mb-1" style="font-size:0.7rem;">Mã: BSMS-MCT-145</p>
@@ -1631,13 +1633,13 @@
 
                 <!-- New Arrivals Card 1 -->
                 <div class="col">
-                    <div class="product-card-premium">
+                    <div class="product-card">
                         <div class="card-image-wrap">
                             <span class="card-status-badge sld">SOLD</span>
                             <button class="card-btn-wishlist" title="Yêu thích"><i class="fa-regular fa-heart"></i></button>
                             <img src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&q=80&w=600" alt="Sanh Quê Dáng Song Thụ" class="card-img-asset">
                         </div>
-                        <div class="card-content-premium">
+                        <div class="card-content">
                             <span class="card-species-tag">Sanh Quê</span>
                             <h3 class="card-title-serif">Sanh Quê Dáng Song Thụ</h3>
                             <p class="card-pedigree-code text-muted mb-1" style="font-size:0.7rem;">Mã: BSMS-SQW-301</p>
@@ -1656,13 +1658,13 @@
 
                 <!-- New Arrivals Card 2 -->
                 <div class="col">
-                    <div class="product-card-premium">
+                    <div class="product-card">
                         <div class="card-image-wrap">
                             <span class="card-status-badge avail">AVAILABLE</span>
                             <button class="card-btn-wishlist" title="Yêu thích"><i class="fa-regular fa-heart"></i></button>
                             <img src="https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&fit=crop&q=80&w=600" alt="Tùng Cối Dáng Xiên" class="card-img-asset">
                         </div>
-                        <div class="card-content-premium">
+                        <div class="card-content">
                             <span class="card-species-tag">Tùng Cối</span>
                             <h3 class="card-title-serif">Tùng Cối Dáng Xiên</h3>
                             <p class="card-pedigree-code text-muted mb-1" style="font-size:0.7rem;">Mã: BSMS-TGC-080</p>
@@ -1681,13 +1683,13 @@
 
                 <!-- New Arrivals Card 3 -->
                 <div class="col">
-                    <div class="product-card-premium">
+                    <div class="product-card">
                         <div class="card-image-wrap">
                             <span class="card-status-badge avail">AVAILABLE</span>
                             <button class="card-btn-wishlist" title="Yêu thích"><i class="fa-regular fa-heart"></i></button>
                             <img src="https://images.unsplash.com/photo-1515150144380-bca9f1650ed9?auto=format&fit=crop&q=80&w=600" alt="Sanh Hoành Bonsai Vườn" class="card-img-asset">
                         </div>
-                        <div class="card-content-premium">
+                        <div class="card-content">
                             <span class="card-species-tag">Sanh Quê</span>
                             <h3 class="card-title-serif">Sanh Hoành Bonsai Vườn</h3>
                             <p class="card-pedigree-code text-muted mb-1" style="font-size:0.7rem;">Mã: BSMS-SNH-184</p>
@@ -1706,13 +1708,13 @@
 
                 <!-- New Arrivals Card 4 -->
                 <div class="col">
-                    <div class="product-card-premium">
+                    <div class="product-card">
                         <div class="card-image-wrap">
                             <span class="card-status-badge avail">AVAILABLE</span>
                             <button class="card-btn-wishlist" title="Yêu thích"><i class="fa-regular fa-heart"></i></button>
                             <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&q=80&w=600" alt="Mini Bonsai Để Bàn" class="card-img-asset">
                         </div>
-                        <div class="card-content-premium">
+                        <div class="card-content">
                             <span class="card-species-tag">Sanh Nam Điền</span>
                             <h3 class="card-title-serif">Mini Bonsai Để Bàn</h3>
                             <p class="card-pedigree-code text-muted mb-1" style="font-size:0.7rem;">Mã: BSMS-MNB-009</p>
@@ -1775,7 +1777,7 @@
 <!-- ===================================================== -->
 <!-- FOOTER -->
 <!-- ===================================================== -->
-<footer class="footer-premium-dark">
+<footer class="footer-dark">
     <div class="container">
         <div class="row g-5">
             <!-- Brand Section -->
