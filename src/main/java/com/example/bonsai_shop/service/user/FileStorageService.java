@@ -50,4 +50,18 @@ public class FileStorageService {
             throw new RuntimeException("Lỗi khi lưu file: " + e.getMessage());
         }
     }
+    public void deleteFile(String fileUrl) {
+        if (fileUrl == null || fileUrl.isBlank()) {
+            return;
+        }
+
+        try {
+            String filename = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+            Path filePath = Paths.get(uploadDir).resolve(filename);
+
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException("Không thể xóa file cũ!");
+        }
+    }
 }

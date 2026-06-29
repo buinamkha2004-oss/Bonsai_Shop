@@ -86,9 +86,12 @@ public class UserService {
         if (phone != null) user.setPhone(phone);
         if (address != null) user.setAddress(address);
 
+        String oldAvatar = user.getAvatar();
+
         if (avatarFile != null && !avatarFile.isEmpty()) {
             String avatarPath = fileStorageService.storeAvatar(avatarFile);
             user.setAvatar(avatarPath);
+            fileStorageService.deleteFile(oldAvatar); // Xóa avatar cũ nếu có
         }
 
         userRepository.save(user);
