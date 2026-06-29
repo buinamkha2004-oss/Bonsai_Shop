@@ -8,8 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.math.BigDecimal;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,22 +22,59 @@ public class MarketplaceController {
     @GetMapping("/marketplace")
     public String marketplace(
             @RequestParam(defaultValue = "0") int page,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String status,
             @RequestParam(name = "availableOnly", required = false) String availableOnly,
+            @RequestParam(required = false) String segment,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) List<String> ages,
+            @RequestParam(required = false) List<String> species,
+            @RequestParam(required = false) List<String> styles,
+            @RequestParam(required = false) String sort,
             Model model) {
 
         boolean showAvailableOnly = "on".equals(availableOnly) || "true".equals(availableOnly);
 
-        Page<Product> products;
-        if (showAvailableOnly) {
-            products = productService.getAvailableProductsOnly(
-                    PageRequest.of(page, 12));
+        Sort springSort;
+        if ("price_asc".equals(sort)) {
+            springSort = Sort.by(Sort.Direction.ASC, "price");
+        } else if ("price_desc".equals(sort)) {
+            springSort = Sort.by(Sort.Direction.DESC, "price");
+        } else if ("age_desc".equals(sort)) {
+            springSort = Sort.by(Sort.Direction.DESC, "age");
         } else {
-            products = productService.getAllActiveProducts(
-                    PageRequest.of(page, 12));
+            springSort = Sort.by(Sort.Direction.DESC, "productId");
         }
 
+        Page<Product> products = productService.getFilteredProducts(
+                keyword,
+                status,
+                showAvailableOnly,
+                segment,
+                category,
+                minPrice,
+                maxPrice,
+                ages,
+                species,
+                styles,
+                PageRequest.of(page, 12, springSort)
+        );
+
         model.addAttribute("products", products);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("status", status);
         model.addAttribute("availableOnly", showAvailableOnly);
+        model.addAttribute("segment", segment);
+        model.addAttribute("category", category);
+        model.addAttribute("minPrice", minPrice);
+        model.addAttribute("maxPrice", maxPrice);
+        model.addAttribute("ages", ages);
+        model.addAttribute("species", species);
+        model.addAttribute("styles", styles);
+        model.addAttribute("sort", sort);
+
         return "/product/marketplace";
     }
 }
