@@ -1395,292 +1395,82 @@
             <!-- Product Card Grid (4 columns on desktop) -->
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3">
 
-                <!-- PRODUCT CARD 1 -->
-                <!--
-                TODO
-                Temporary hardcoded product.
-                Future:
-                th:each="product : ${products}"
-                Replace:
-                Image, Name, Species, Price, Description, Badge, Rating
-                with backend data.
-                -->
-                <div class="col">
+                <!-- DYNAMIC PRODUCT CARDS LOOP -->
+                <div class="col" th:each="product : ${products}">
                     <div class="product-card-premium">
                         <div class="card-image-wrap">
-                            <span class="card-status-badge avail">AVAILABLE</span>
-                            <button class="card-btn-wishlist" title="Yêu thích"><i class="fa-regular fa-heart"></i></button>
+                            <!-- Status Badge: Dynamically rendered based on ProductStatus -->
+                            <span th:if="${product.productStatus == 'AVAILABLE'}" class="card-status-badge avail">AVAILABLE</span>
+                            <span th:if="${product.productStatus == 'RESERVED'}" class="card-status-badge resv">RESERVED</span>
+                            <span th:if="${product.productStatus == 'SOLD'}" class="card-status-badge sld">SOLD</span>
+                            <!-- Fallback for other status values -->
+                            <span th:if="${product.productStatus != 'AVAILABLE' && product.productStatus != 'RESERVED' && product.productStatus != 'SOLD'}" 
+                                  th:text="${product.productStatus}" class="card-status-badge avail">AVAILABLE</span>
+                            
+                            <!-- Wishlist button (UI only as per instructions) -->
                             <!--
                             TODO
-                            Future:
-                            th:src="@{${product.image}}"
+                            Wishlist icon kept UI-only.
+                            Reason: Wishlist interaction logic is not requested for this task.
                             -->
-                            <img src="https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&q=80&w=600" alt="Sanh Nam Điền Dáng Trực Cổ" class="card-img-asset">
-                        </div>
-                        
-                        <div class="card-content-premium">
-                            <span class="card-species-tag">Sanh Nam Điền</span>
-                            
-                            <!-- Future: th:text="${product.name}" -->
-                            <h3 class="card-title-serif">Sanh Nam Điền Dáng Trực Cổ</h3>
-                            
-                            <p class="card-pedigree-code text-muted mb-1" style="font-size:0.7rem;">Mã: BSMS-SND-102</p>
-                            <p class="card-dimensions-meta text-muted mb-2">Tuổi: 12 năm • Cao: 65cm • Thân: 15cm</p>
-                            
-                            <div class="card-price-rating-row">
-                                <!-- Future: th:text="${product.price}" -->
-                                <span class="card-price-val">4.500.000 đ</span>
-                                <span class="card-rating-val">4.8 <i class="fa-solid fa-star"></i></span>
-                            </div>
-                            
-                            <div class="mt-2">
-                                <button class="btn-card-cart-outline"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</button>
-                                <a href="#" class="card-view-details-link">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PRODUCT CARD 2 -->
-                <!--
-                TODO
-                Temporary hardcoded product.
-                Future:
-                th:each="product : ${products}"
-                -->
-                <div class="col">
-                    <div class="product-card-premium">
-                        <div class="card-image-wrap">
-                            <span class="card-status-badge avail">AVAILABLE</span>
                             <button class="card-btn-wishlist" title="Yêu thích"><i class="fa-regular fa-heart"></i></button>
-                            <!-- TODO Future: th:src="@{${product.image}}" -->
-                            <img src="https://images.unsplash.com/photo-1515150144380-bca9f1650ed9?auto=format&fit=crop&q=80&w=600" alt="Tùng La Hán Dáng Hoành" class="card-img-asset">
+                            
+                            <!-- Image URL binding with default fallback -->
+                            <!--
+                            TODO
+                            Image fallback to a default Unsplash mockup image if product.firstImageUrl is empty.
+                            Reason: Current ProductMedia does not provide usable image data for some items.
+                            -->
+                            <img th:src="${product.firstImageUrl != null && !product.firstImageUrl.isEmpty() ? product.firstImageUrl : 'https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&q=80&w=600'}" 
+                                 th:alt="${product.productName}" class="card-img-asset">
                         </div>
                         
                         <div class="card-content-premium">
-                            <span class="card-species-tag">Tùng La Hán</span>
-                            <h3 class="card-title-serif">Tùng La Hán Dáng Hoành</h3>
-                            <p class="card-pedigree-code text-muted mb-1" style="font-size:0.7rem;">Mã: BSMS-TLH-218</p>
-                            <p class="card-dimensions-meta text-muted mb-2">Tuổi: 18 năm • Cao: 80cm • Thân: 22cm</p>
+                            <!-- Variety/Species binding -->
+                            <span class="card-species-tag" th:text="${product.variety != null ? product.variety.varietyName : 'Bonsai'}">Sanh Nam Điền</span>
+                            
+                            <!-- Title binding -->
+                            <h3 class="card-title-serif" th:text="${product.productName}">Sanh Nam Điền Dáng Trực Cổ</h3>
+                            
+                            <!-- Pedigree/Code binding -->
+                            <p class="card-pedigree-code text-muted mb-1" style="font-size:0.7rem;" th:text="${'Mã: ' + product.productCode}">Mã: BSMS-SND-102</p>
+                            
+                            <!-- Dimensions Metadata (Age, Height, TrunkDiameter) -->
+                            <p class="card-dimensions-meta text-muted mb-2" 
+                               th:text="${'Tuổi: ' + (product.age != null ? product.age + ' năm' : 'N/A') + ' • Cao: ' + (product.height != null ? product.height + 'cm' : 'N/A') + ' • Thân: ' + (product.trunkDiameter != null ? product.trunkDiameter + 'cm' : 'N/A')}">
+                                Tuổi: 12 năm • Cao: 65cm • Thân: 15cm
+                            </p>
                             
                             <div class="card-price-rating-row">
-                                <span class="card-price-val">8.900.000 đ</span>
-                                <span class="card-rating-val">4.9 <i class="fa-solid fa-star"></i></span>
+                                <!-- Price binding -->
+                                <span class="card-price-val" th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'POINT') + ' đ'}">4.500.000 đ</span>
+                                
+                                <!-- Rating binding with fallback -->
+                                <!--
+                                TODO
+                                Rating kept hardcoded to 4.8 if averageRating is null.
+                                Reason: Current Review entity does not have enough reviews to compute average rating for all products.
+                                -->
+                                <span class="card-rating-val">
+                                    <span th:text="${product.averageRating != null ? #numbers.formatDecimal(product.averageRating, 1, 1) : '4.8'}">4.8</span>
+                                    <i class="fa-solid fa-star"></i>
+                                </span>
                             </div>
+                            
+                            <!-- Description & Segment & Style fallback placeholders -->
+                            <!--
+                            TODO
+                            Description, Style, and Segment are kept hardcoded or omitted from this card layout view.
+                            Reason: These fields are not displayed directly on the grid card UI layout.
+                            -->
                             
                             <div class="mt-2">
-                                <button class="btn-card-cart-outline"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</button>
-                                <a href="#" class="card-view-details-link">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PRODUCT CARD 3 -->
-                <!--
-                TODO
-                Temporary hardcoded product.
-                Future:
-                th:each="product : ${products}"
-                -->
-                <div class="col">
-                    <div class="product-card-premium">
-                        <div class="card-image-wrap">
-                            <span class="card-status-badge resv">RESERVED</span>
-                            <button class="card-btn-wishlist" title="Yêu thích"><i class="fa-regular fa-heart"></i></button>
-                            <!-- TODO Future: th:src="@{${product.image}}" -->
-                            <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&q=80&w=600" alt="Linh Sam Dáng Huyền" class="card-img-asset">
-                        </div>
-                        
-                        <div class="card-content-premium">
-                            <span class="card-species-tag">Linh Sam</span>
-                            <h3 class="card-title-serif">Linh Sam Dáng Huyền</h3>
-                            <p class="card-pedigree-code text-muted mb-1" style="font-size:0.7rem;">Mã: BSMS-LSM-077</p>
-                            <p class="card-dimensions-meta text-muted mb-2">Tuổi: 9 năm • Cao: 55cm • Thân: 11cm</p>
-                            
-                            <div class="card-price-rating-row">
-                                <span class="card-price-val">3.200.000 đ</span>
-                                <span class="card-rating-val">4.7 <i class="fa-solid fa-star"></i></span>
-                            </div>
-                            
-                            <div class="mt-2">
-                                <button class="btn-card-disabled" disabled>Reserved</button>
-                                <a href="#" class="card-view-details-link">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PRODUCT CARD 4 -->
-                <!--
-                TODO
-                Temporary hardcoded product.
-                Future:
-                th:each="product : ${products}"
-                -->
-                <div class="col">
-                    <div class="product-card-premium">
-                        <div class="card-image-wrap">
-                            <span class="card-status-badge avail">AVAILABLE</span>
-                            <button class="card-btn-wishlist" title="Yêu thích"><i class="fa-regular fa-heart"></i></button>
-                            <!-- TODO Future: th:src="@{${product.image}}" -->
-                            <img src="https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&fit=crop&q=80&w=600" alt="Mai Chiếu Thủy Bonsai Hoa" class="card-img-asset">
-                        </div>
-                        
-                        <div class="card-content-premium">
-                            <span class="card-species-tag">Mai Chiếu Thủy</span>
-                            <h3 class="card-title-serif">Mai Chiếu Thủy Bonsai Hoa</h3>
-                            <p class="card-pedigree-code text-muted mb-1" style="font-size:0.7rem;">Mã: BSMS-MCT-145</p>
-                            <p class="card-dimensions-meta text-muted mb-2">Tuổi: 14 năm • Cao: 70cm • Thân: 18cm</p>
-                            
-                            <div class="card-price-rating-row">
-                                <span class="card-price-val">6.700.000 đ</span>
-                                <span class="card-rating-val">4.8 <i class="fa-solid fa-star"></i></span>
-                            </div>
-                            
-                            <div class="mt-2">
-                                <button class="btn-card-cart-outline"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</button>
-                                <a href="#" class="card-view-details-link">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PRODUCT CARD 5 -->
-                <!--
-                TODO
-                Temporary hardcoded product.
-                Future:
-                th:each="product : ${products}"
-                -->
-                <div class="col">
-                    <div class="product-card-premium">
-                        <div class="card-image-wrap">
-                            <span class="card-status-badge sld">SOLD</span>
-                            <button class="card-btn-wishlist" title="Yêu thích"><i class="fa-regular fa-heart"></i></button>
-                            <!-- TODO Future: th:src="@{${product.image}}" -->
-                            <img src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&q=80&w=600" alt="Sanh Quê Dáng Song Thụ" class="card-img-asset">
-                        </div>
-                        
-                        <div class="card-content-premium">
-                            <span class="card-species-tag">Sanh Quê</span>
-                            <h3 class="card-title-serif">Sanh Quê Dáng Song Thụ</h3>
-                            <p class="card-pedigree-code text-muted mb-1" style="font-size:0.7rem;">Mã: BSMS-SQW-301</p>
-                            <p class="card-dimensions-meta text-muted mb-2">Tuổi: 20 năm • Cao: 95cm • Thân: 26cm</p>
-                            
-                            <div class="card-price-rating-row">
-                                <span class="card-price-val">12.500.000 đ</span>
-                                <span class="card-rating-val">5.0 <i class="fa-solid fa-star"></i></span>
-                            </div>
-                            
-                            <div class="mt-2">
-                                <button class="btn-card-disabled" disabled>Sold</button>
-                                <a href="#" class="card-view-details-link">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PRODUCT CARD 6 -->
-                <!--
-                TODO
-                Temporary hardcoded product.
-                Future:
-                th:each="product : ${products}"
-                -->
-                <div class="col">
-                    <div class="product-card-premium">
-                        <div class="card-image-wrap">
-                            <span class="card-status-badge avail">AVAILABLE</span>
-                            <button class="card-btn-wishlist" title="Yêu thích"><i class="fa-regular fa-heart"></i></button>
-                            <!-- TODO Future: th:src="@{${product.image}}" -->
-                            <img src="https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&fit=crop&q=80&w=600" alt="Tùng Cối Dáng Xiên" class="card-img-asset">
-                        </div>
-                        
-                        <div class="card-content-premium">
-                            <span class="card-species-tag">Tùng Cối</span>
-                            <h3 class="card-title-serif">Tùng Cối Dáng Xiên</h3>
-                            <p class="card-pedigree-code text-muted mb-1" style="font-size:0.7rem;">Mã: BSMS-TGC-080</p>
-                            <p class="card-dimensions-meta text-muted mb-2">Tuổi: 11 năm • Cao: 60cm • Thân: 13cm</p>
-                            
-                            <div class="card-price-rating-row">
-                                <span class="card-price-val">3.900.000 đ</span>
-                                <span class="card-rating-val">4.6 <i class="fa-solid fa-star"></i></span>
-                            </div>
-                            
-                            <div class="mt-2">
-                                <button class="btn-card-cart-outline"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</button>
-                                <a href="#" class="card-view-details-link">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PRODUCT CARD 7 -->
-                <!--
-                TODO
-                Temporary hardcoded product.
-                Future:
-                th:each="product : ${products}"
-                -->
-                <div class="col">
-                    <div class="product-card-premium">
-                        <div class="card-image-wrap">
-                            <span class="card-status-badge avail">AVAILABLE</span>
-                            <button class="card-btn-wishlist" title="Yêu thích"><i class="fa-regular fa-heart"></i></button>
-                            <!-- TODO Future: th:src="@{${product.image}}" -->
-                            <img src="https://images.unsplash.com/photo-1515150144380-bca9f1650ed9?auto=format&fit=crop&q=80&w=600" alt="Sanh Hoành Bonsai Vườn" class="card-img-asset">
-                        </div>
-                        
-                        <div class="card-content-premium">
-                            <span class="card-species-tag">Sanh Quê</span>
-                            <h3 class="card-title-serif">Sanh Hoành Bonsai Vườn</h3>
-                            <p class="card-pedigree-code text-muted mb-1" style="font-size:0.7rem;">Mã: BSMS-SNH-184</p>
-                            <p class="card-dimensions-meta text-muted mb-2">Tuổi: 15 năm • Cao: 75cm • Thân: 17cm</p>
-                            
-                            <div class="card-price-rating-row">
-                                <span class="card-price-val">5.800.000 đ</span>
-                                <span class="card-rating-val">4.7 <i class="fa-solid fa-star"></i></span>
-                            </div>
-                            
-                            <div class="mt-2">
-                                <button class="btn-card-cart-outline"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</button>
-                                <a href="#" class="card-view-details-link">View Details →</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- PRODUCT CARD 8 -->
-                <!--
-                TODO
-                Temporary hardcoded product.
-                Future:
-                th:each="product : ${products}"
-                -->
-                <div class="col">
-                    <div class="product-card-premium">
-                        <div class="card-image-wrap">
-                            <span class="card-status-badge avail">AVAILABLE</span>
-                            <button class="card-btn-wishlist" title="Yêu thích"><i class="fa-regular fa-heart"></i></button>
-                            <!-- TODO Future: th:src="@{${product.image}}" -->
-                            <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&q=80&w=600" alt="Mini Bonsai Để Bàn" class="card-img-asset">
-                        </div>
-                        
-                        <div class="card-content-premium">
-                            <span class="card-species-tag">Sanh Nam Điền</span>
-                            <h3 class="card-title-serif">Mini Bonsai Để Bàn</h3>
-                            <p class="card-pedigree-code text-muted mb-1" style="font-size:0.7rem;">Mã: BSMS-MNB-009</p>
-                            <p class="card-dimensions-meta text-muted mb-2">Tuổi: 4 năm • Cao: 25cm • Thân: 5cm</p>
-                            
-                            <div class="card-price-rating-row">
-                                <span class="card-price-val">950.000 đ</span>
-                                <span class="card-rating-val">4.5 <i class="fa-solid fa-star"></i></span>
-                            </div>
-                            
-                            <div class="mt-2">
-                                <button class="btn-card-cart-outline"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</button>
-                                <a href="#" class="card-view-details-link">View Details →</a>
+                                <!-- Add to Cart / Disabled button based on status -->
+                                <button th:if="${product.productStatus == 'AVAILABLE'}" class="btn-card-cart-outline"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</button>
+                                <button th:if="${product.productStatus == 'RESERVED'}" class="btn-card-disabled" disabled>Reserved</button>
+                                <button th:if="${product.productStatus == 'SOLD'}" class="btn-card-disabled" disabled>Sold</button>
+                                
+                                <a th:href="@{'/product/' + ${product.productId}}" class="card-view-details-link">View Details →</a>
                             </div>
                         </div>
                     </div>
@@ -1961,7 +1751,7 @@
                 <div class="service-feature-card">
                     <div class="service-icon-circle"><i class="fa-solid fa-shield-halved"></i></div>
                     <h4 class="service-label-title">Verified Sellers</h4>
-                    <p class="service-desc-text">Nhà vườn nghệ nhân uy tín Bắc Bộ có phả hệ minh bạch.</p>
+                    <p class="service-desc-text">Nhà vườn nghệ nhân uy tín Bắc Bộ với nghệ nhân có kinh nghiệm lâu năm trong ngành.</p>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6">

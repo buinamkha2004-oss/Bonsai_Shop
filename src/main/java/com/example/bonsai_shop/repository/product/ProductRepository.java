@@ -32,4 +32,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
                 AND (m.isThumbnail = true OR m IS NULL)
     """)
     Page<ProductCardDTO> findMarketplaceProducts(Pageable pageable);
+
+    @Query("SELECT p FROM Product p JOIN FETCH p.variety JOIN FETCH p.seller WHERE p.isPublicPrice = true")
+    Page<Product> findAllActiveProducts(Pageable pageable);
 }

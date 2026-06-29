@@ -1,6 +1,7 @@
 package com.example.bonsai_shop.controller.product;
 
 import com.example.bonsai_shop.dto.ProductCardDTO;
+import com.example.bonsai_shop.entity.Product;
 import com.example.bonsai_shop.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,8 +20,8 @@ public class MarketplaceController {
     public String marketplace(
             @RequestParam(defaultValue = "0") int page,
             Model model) {
-        Page<ProductCardDTO> products =
-                productService.getMarketplaceProducts(
+        Page<Product> products =
+                productService.getAllActiveProducts(
                         PageRequest.of(page, 12));
         model.addAttribute("products", products);
         return "/product/marketplace";
