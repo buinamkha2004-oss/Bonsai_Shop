@@ -23,6 +23,6 @@ public class MarketplaceController {
                 productService.getMarketplaceProducts(
                         PageRequest.of(page, 12));
         model.addAttribute("products", products);
-        return "marketplace";
+        return "/product/marketplace";
     }
 }
