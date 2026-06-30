@@ -15,7 +15,7 @@ public class ForgotPasswordController {
     // ===== BƯỚC 1: Nhập email =====
     @GetMapping("/forgot-password")
     public String forgotPasswordPage() {
-        return "/user/forgot-password";
+        return "/customer/forgot-password";
     }
 
     @PostMapping("/forgot-password")

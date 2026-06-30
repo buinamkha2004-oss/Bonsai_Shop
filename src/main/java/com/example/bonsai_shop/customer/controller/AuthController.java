@@ -32,7 +32,7 @@ public class AuthController {
     // ===== TRANG REGISTER =====
     @GetMapping("/register")
     public String registerPage() {
-        return "/user/register";
+        return "/customer/register";
     }
 
     @PostMapping("/register")
