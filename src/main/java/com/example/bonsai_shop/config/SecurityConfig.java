@@ -1,6 +1,6 @@
 package com.example.bonsai_shop.config;
 
-import com.example.bonsai_shop.service.user.CustomUserDetailsService;
+import com.example.bonsai_shop.customer.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
