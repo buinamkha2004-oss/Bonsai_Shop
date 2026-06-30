@@ -20,11 +20,11 @@ public class Role {
     @Column(name = "Description", length = 500)
     private String description;
 
-    // 1 role có nhiều user
+
     @OneToMany(mappedBy = "role")
     private List<User> users;
 
-    // 1 role có nhiều quyền action
+
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
     private List<RoleAction> roleActions;
 }

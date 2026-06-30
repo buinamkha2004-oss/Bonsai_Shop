@@ -1,11 +1,12 @@
 package com.example.bonsai_shop.config;
 
-import com.example.bonsai_shop.service.user.CustomUserDetailsService;
+import com.example.bonsai_shop.customer.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
@@ -45,6 +47,15 @@ public class SecurityConfig {
                         ).permitAll()
                         // Chỉ ADMIN mới vào được /admin/**
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        // Chặn theo Action cụ thể (permission-based)
+                        .requestMatchers("/products/create", "/products/edit/**", "/prodcuts/delete/**")
+                                        .hasAuthority("ACTION_PRODUCT_MANAGE")
+                        .requestMatchers("/orders/all")
+                                         .hasAuthority("ACTION_ORDER_VIEW_ALL")
+                        .requestMatchers("/orders/handle-claim/**")
+                                         .hasAuthority("ACTION_ORDER_HANDLE_CLAIM")
+                        .requestMatchers("/users/**")
+                                         .hasAuthority("ACTION_USER_MANAGE")
                         // Các trang khác cần đăng nhập
                         .anyRequest().authenticated()
                 )
