@@ -75,4 +75,26 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Wishlist> wishlists;
+
+    public String getFirstImageUrl() {
+        if (productMedias == null || productMedias.isEmpty()) {
+            return null;
+        }
+        for (ProductMedia media : productMedias) {
+            if (Boolean.TRUE.equals(media.getIsThumbnail())) {
+                return media.getMediaUrl();
+            }
+        }
+        return productMedias.get(0).getMediaUrl();
+    }
+
+    public Double getAverageRating() {
+        if (reviews == null || reviews.isEmpty()) {
+            return null;
+        }
+        return reviews.stream()
+                .mapToInt(Review::getRating)
+                .average()
+                .orElse(0.0);
+    }
 }

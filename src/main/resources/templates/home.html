@@ -14,7 +14,7 @@
     <a href="/" class="logo">🌿 Bonsai Shop</a>
 
     <div class="nav-links">
-        <a th:href="@{/}">Trang chủ</a>
+        <a th:href="@{/marketplace}">Trang chủ</a>
         <a th:href="@{/products}">Sản phẩm</a>
         <a th:href="@{/wishlist}">Yêu thích</a>
         <a th:href="@{/cart}">Giỏ hàng</a>
@@ -43,7 +43,7 @@
 
 <!-- WELCOME BAR (chỉ hiện khi đã đăng nhập) -->
 <div class="welcome-bar" sec:authorize="isAuthenticated()">
-    👋 Chào mừng <span th:text="${username}"></span> đã quay trở lại!
+    Chào mừng <span th:text="${username}"></span> đã quay trở lại!
 </div>
 
 <!-- HERO -->
