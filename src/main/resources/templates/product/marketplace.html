@@ -1277,9 +1277,8 @@
                         <a href="/marketplace" class="filter-panel-clear-link">Xoá</a>
                     </div>
     
-                    <!-- Preserved search, sorting and min price state -->
+                    <!-- Preserved search and sorting state -->
                     <input type="hidden" name="keyword" th:value="${keyword}">
-                    <input type="hidden" name="minPrice" th:value="${minPrice != null ? minPrice : 500000}">
                     <input type="hidden" name="sort" id="filterSort" th:value="${sort}">
 
                     <!-- Species Checklist -->
@@ -1382,18 +1381,64 @@
                         </div>
                     </div>
     
-                    <!-- Price Slider Range -->
+                    <!-- Price Filter -->
                     <div class="filter-block">
                         <div class="filter-block-title">
-                            Khoảng giá
+                            Khoảng giá (Price)
                             <i class="fa-solid fa-chevron-up"></i>
                         </div>
-                        <div class="filter-block-content range-slider-wrap">
-                            <input type="range" name="maxPrice" class="price-slider-input" min="500000" max="20000000" step="500000" id="priceRangeSlider" th:value="${maxPrice ?: 20000000}">
-                            <div class="range-vals">
-                                <span>500.000 đ</span>
-                                <span id="priceRangeMaxVal" style="color: var(--primary-color); font-weight:700;" th:text="${maxPrice != null ? #numbers.formatDecimal(maxPrice, 0, 'POINT', 0, 'POINT') + ' đ' : '20.000.000 đ'}">20.000.000 đ</span>
+                        <div class="filter-block-content">
+                            <!-- Manual input fields -->
+                            <div class="mb-2">
+                                <label class="form-label small text-secondary mb-1">Min Price</label>
+                                <input type="number" name="minPrice" th:value="${minPrice}" class="form-control form-control-sm" placeholder="Min Price" min="0" style="border-color: var(--border-color); border-radius: 4px; box-shadow: none;">
                             </div>
+                            <div class="mb-3">
+                                <label class="form-label small text-secondary mb-1">Max Price</label>
+                                <input type="number" name="maxPrice" th:value="${maxPrice}" class="form-control form-control-sm" placeholder="Max Price" min="0" style="border-color: var(--border-color); border-radius: 4px; box-shadow: none;">
+                            </div>
+
+                            <!-- Divider line -->
+                            <hr style="border-top: 1px solid var(--border-color); margin: 15px 0; opacity: 0.5;">
+
+                            <!-- Quick range section -->
+                            <div class="small text-secondary fw-bold mb-2">Quick Range</div>
+                            
+                            <label class="checkbox-label">
+                                Under 1M
+                                <input type="checkbox" name="priceRanges" value="under1M" th:checked="${priceRanges != null && priceRanges.contains('under1M')}">
+                                <span class="checkbox-checkmark"></span>
+                            </label>
+                            
+                            <label class="checkbox-label">
+                                1M – 5M
+                                <input type="checkbox" name="priceRanges" value="1Mto5M" th:checked="${priceRanges != null && priceRanges.contains('1Mto5M')}">
+                                <span class="checkbox-checkmark"></span>
+                            </label>
+                            
+                            <label class="checkbox-label">
+                                5M – 10M
+                                <input type="checkbox" name="priceRanges" value="5Mto10M" th:checked="${priceRanges != null && priceRanges.contains('5Mto10M')}">
+                                <span class="checkbox-checkmark"></span>
+                            </label>
+                            
+                            <label class="checkbox-label">
+                                10M – 30M
+                                <input type="checkbox" name="priceRanges" value="10Mto30M" th:checked="${priceRanges != null && priceRanges.contains('10Mto30M')}">
+                                <span class="checkbox-checkmark"></span>
+                            </label>
+                            
+                            <label class="checkbox-label">
+                                30M – 100M
+                                <input type="checkbox" name="priceRanges" value="30Mto100M" th:checked="${priceRanges != null && priceRanges.contains('30Mto100M')}">
+                                <span class="checkbox-checkmark"></span>
+                            </label>
+                            
+                            <label class="checkbox-label">
+                                Over 100M
+                                <input type="checkbox" name="priceRanges" value="over100M" th:checked="${priceRanges != null && priceRanges.contains('over100M')}">
+                                <span class="checkbox-checkmark"></span>
+                            </label>
                         </div>
                     </div>
     
@@ -1909,15 +1954,6 @@
 
 <!-- Custom UI Logic Script -->
 <script>
-    // Price range slider dynamic value update
-    const priceSlider = document.getElementById('priceRangeSlider');
-    const priceDisplayVal = document.getElementById('priceRangeMaxVal');
-    if (priceSlider && priceDisplayVal) {
-        priceSlider.addEventListener('input', (e) => {
-            const formattedVal = new Intl.NumberFormat('vi-VN').format(e.target.value);
-            priceDisplayVal.textContent = formattedVal + ' đ';
-        });
-    }
 
     // Sort select change handlers (Desktop and Mobile)
     const gridSortSelect = document.getElementById('gridSortSelect');

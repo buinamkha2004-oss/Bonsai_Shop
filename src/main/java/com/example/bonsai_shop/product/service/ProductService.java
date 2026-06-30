@@ -40,10 +40,11 @@ public class ProductService {
             List<String> ages,
             List<String> species,
             List<String> styles,
+            List<String> priceRanges,
             Pageable pageable) {
         return productRepository.findAll(
                 ProductSpecifications.filterProducts(
-                        keyword, status, availableOnly, segment, category, minPrice, maxPrice, ages, species, styles
+                        keyword, status, availableOnly, segment, category, minPrice, maxPrice, ages, species, styles, priceRanges
                 ),
                 pageable
         );

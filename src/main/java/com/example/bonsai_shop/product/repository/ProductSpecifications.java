@@ -19,7 +19,8 @@ public class ProductSpecifications {
             BigDecimal maxPrice,
             List<String> ages,
             List<String> species,
-            List<String> styles) {
+            List<String> styles,
+            List<String> priceRanges) {
         return (Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -68,14 +69,44 @@ public class ProductSpecifications {
                 }
             }
 
-            // minPrice
-            if (minPrice != null) {
-                predicates.add(cb.ge(root.get("price"), minPrice));
-            }
-
-            // maxPrice
-            if (maxPrice != null) {
-                predicates.add(cb.le(root.get("price"), maxPrice));
+            // minPrice and maxPrice manual input
+            if (minPrice != null || maxPrice != null) {
+                if (minPrice != null) {
+                    predicates.add(cb.ge(root.get("price"), minPrice));
+                }
+                if (maxPrice != null) {
+                    predicates.add(cb.le(root.get("price"), maxPrice));
+                }
+            } else if (priceRanges != null && !priceRanges.isEmpty()) {
+                // quick price ranges
+                List<Predicate> rangePredicates = new ArrayList<>();
+                for (String range : priceRanges) {
+                    if (range != null) {
+                        switch (range) {
+                            case "under1M":
+                                rangePredicates.add(cb.lessThan(root.get("price"), new BigDecimal("1000000")));
+                                break;
+                            case "1Mto5M":
+                                rangePredicates.add(cb.between(root.get("price"), new BigDecimal("1000000"), new BigDecimal("5000000")));
+                                break;
+                            case "5Mto10M":
+                                rangePredicates.add(cb.between(root.get("price"), new BigDecimal("5000000"), new BigDecimal("10000000")));
+                                break;
+                            case "10Mto30M":
+                                rangePredicates.add(cb.between(root.get("price"), new BigDecimal("10000000"), new BigDecimal("30000000")));
+                                break;
+                            case "30Mto100M":
+                                rangePredicates.add(cb.between(root.get("price"), new BigDecimal("30000000"), new BigDecimal("100000000")));
+                                break;
+                            case "over100M":
+                                rangePredicates.add(cb.greaterThan(root.get("price"), new BigDecimal("100000000")));
+                                break;
+                        }
+                    }
+                }
+                if (!rangePredicates.isEmpty()) {
+                    predicates.add(cb.or(rangePredicates.toArray(new Predicate[0])));
+                }
             }
 
             // ages (multiple checkboxes: OR logic between selected ranges)
