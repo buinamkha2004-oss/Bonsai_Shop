@@ -79,4 +79,9 @@ public class MarketplaceController {
 
         return "/product/marketplace";
     }
+
+    @GetMapping({"/products/detail", "/product/{id}"})
+    public String productDetail() {
+        return "product/product-detail";
+    }
 }
