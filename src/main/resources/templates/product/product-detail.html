@@ -240,10 +240,10 @@
                 <div class="action-flex-row">
                     <!-- Buy Now Button -->
                     <!-- <button class="btn-buy-vnpay" th:if="${product.productStatus == 'AVAILABLE'}">Buy Now • VNPay</button> -->
-                    <form th:action="@{/vnpay/create-payment}" method="get" style="width: 100%;">
+                    <form th:action="@{/vnpay/create-payment}" method="get" style="width: 100%;" th:if="${product.productStatus == 'AVAILABLE'}">
                         <input type="hidden" name="productId" th:value="${product.productId}" />                 
-                        <button type="submit" class="btn-buy-vnpay" th:if="${product.productStatus == 'AVAILABLE'}">
-                            Buy Now • VNPay
+                        <button type="submit" class="btn-buy-vnpay">
+                            Gửi yêu cầu mua
                         </button>
                     </form>
 
