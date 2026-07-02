@@ -17,73 +17,71 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final CustomUserDetailsService customUserDetailsService;
+        private final CustomUserDetailsService customUserDetailsService;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(auth -> auth
-                        // Trang công khai
-                        .requestMatchers(
-                                "/",
-                                "/products/**",
-                                "/register",
-                                "/login",
-                                "/forgot-password",
-                                "/verify-otp",
-                                "/resend-otp",
-                                "/reset-password",
-                                "/verify-otp-to-reset-password",
-                                "/resend-otp-reset",
-                                "/avatars/**",  // ← cho phép xem ảnh avatar
-                                "/css/**",      // ← cho phép CSS
-                                "/js/**",       // ← cho phép JS
-                                "/images/**"    // ← cho phép images
-                        ).permitAll()
-                        // Chỉ ADMIN mới vào được /admin/**
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        // Chặn theo Action cụ thể (permission-based)
-                        .requestMatchers("/products/create", "/products/edit/**", "/prodcuts/delete/**")
-                                        .hasAuthority("ACTION_PRODUCT_MANAGE")
-                        .requestMatchers("/orders/all")
-                                         .hasAuthority("ACTION_ORDER_VIEW_ALL")
-                        .requestMatchers("/orders/handle-claim/**")
-                                         .hasAuthority("ACTION_ORDER_HANDLE_CLAIM")
-                        .requestMatchers("/users/**")
-                                         .hasAuthority("ACTION_USER_MANAGE")
-                        // Các trang khác cần đăng nhập
-                        .anyRequest().authenticated()
-                )
-                .formLogin(form -> form
-                        .loginPage("/login")           // trang login tự tạo
-                        .loginProcessingUrl("/login")  // URL xử lý form login
-                        .defaultSuccessUrl("/home", true)  // sau login về trang chủ
-                        .failureUrl("/login?error")    // login sai về trang này
-                        .permitAll()
-                )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
-                        .invalidateHttpSession(true)      // xóa session
-                        .clearAuthentication(true)        // xóa authentication
-                        .deleteCookies("JSESSIONID")      // xóa cookie
-                        .permitAll()
-                );
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http
+                                .authorizeHttpRequests(auth -> auth
+                                                // Trang công khai
+                                                .requestMatchers(
+                                                                "/",
+                                                                "/products/**",
+                                                                "/register",
+                                                                "/login",
+                                                                "/forgot-password",
+                                                                "/verify-otp",
+                                                                "/resend-otp",
+                                                                "/reset-password",
+                                                                "/verify-otp-to-reset-password",
+                                                                "/resend-otp-reset",
+                                                                "/vnpay/**", // ← cho phép thanh toán VNPAY
+                                                                "/avatars/**", // ← cho phép xem ảnh avatar
+                                                                "/css/**", // ← cho phép CSS
+                                                                "/js/**", // ← cho phép JS
+                                                                "/images/**" // ← cho phép images
+                                                ).permitAll()
+                                                // Chỉ ADMIN mới vào được /admin/**
+                                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                                // Chặn theo Action cụ thể (permission-based)
+                                                .requestMatchers("/products/create", "/products/edit/**",
+                                                                "/prodcuts/delete/**")
+                                                .hasAuthority("ACTION_PRODUCT_MANAGE")
+                                                .requestMatchers("/orders/all")
+                                                .hasAuthority("ACTION_ORDER_VIEW_ALL")
+                                                .requestMatchers("/orders/handle-claim/**")
+                                                .hasAuthority("ACTION_ORDER_HANDLE_CLAIM")
+                                                .requestMatchers("/users/**")
+                                                .hasAuthority("ACTION_USER_MANAGE")
+                                                // Các trang khác cần đăng nhập
+                                                .anyRequest().authenticated())
+                                .formLogin(form -> form
+                                                .loginPage("/login") // trang login tự tạo
+                                                .loginProcessingUrl("/login") // URL xử lý form login
+                                                .defaultSuccessUrl("/home", true) // sau login về trang chủ
+                                                .failureUrl("/login?error") // login sai về trang này
+                                                .permitAll())
+                                .logout(logout -> logout
+                                                .logoutUrl("/logout")
+                                                .logoutSuccessUrl("/login?logout")
+                                                .invalidateHttpSession(true) // xóa session
+                                                .clearAuthentication(true) // xóa authentication
+                                                .deleteCookies("JSESSIONID") // xóa cookie
+                                                .permitAll());
 
-        return http.build();
-    }
+                return http.build();
+        }
 
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder builder =
-                http.getSharedObject(AuthenticationManagerBuilder.class);
-        builder.userDetailsService(customUserDetailsService)
-                .passwordEncoder(passwordEncoder());
-        return builder.build();
-    }
+        @Bean
+        public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+                AuthenticationManagerBuilder builder = http.getSharedObject(AuthenticationManagerBuilder.class);
+                builder.userDetailsService(customUserDetailsService)
+                                .passwordEncoder(passwordEncoder());
+                return builder.build();
+        }
 }
