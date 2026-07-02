@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        // Trang công khai
+                        // Trang cÃ´ng khai
                         .requestMatchers(
                                 "/",
                                 "/products/**",
@@ -40,15 +41,16 @@ public class SecurityConfig {
                                 "/reset-password",
                                 "/verify-otp-to-reset-password",
                                 "/resend-otp-reset",
-                                "/avatars/**",  // ← cho phép xem ảnh avatar
-                                "/css/**",      // ← cho phép CSS
-                                "/js/**",       // ← cho phép JS
-                                "/images/**"    // ← cho phép images
+                                "/avatars/**",  // â† cho phÃ©p xem áº£nh avatar
+                                "/css/**",      // â† cho phÃ©p CSS
+                                "/js/**",       // â† cho phÃ©p JS
+                                "/images/**"    // â† cho phÃ©p images
                         ).permitAll()
-                        // Chỉ ADMIN mới vào được /admin/**
+                        // Chá»‰ ADMIN má»›i vÃ o Ä‘Æ°á»£c /admin/**
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        // Chặn theo Action cụ thể (permission-based)
-                        .requestMatchers("/products/create", "/products/edit/**", "/prodcuts/delete/**")
+                        .requestMatchers("/seller/**").hasAnyRole("SELLER", "ADMIN")
+                        // Cháº·n theo Action cá»¥ thá»ƒ (permission-based)
+                        .requestMatchers("/products/create", "/products/edit/**", "/products/delete/**")
                                         .hasAuthority("ACTION_PRODUCT_MANAGE")
                         .requestMatchers("/orders/all")
                                          .hasAuthority("ACTION_ORDER_VIEW_ALL")
@@ -56,28 +58,45 @@ public class SecurityConfig {
                                          .hasAuthority("ACTION_ORDER_HANDLE_CLAIM")
                         .requestMatchers("/users/**")
                                          .hasAuthority("ACTION_USER_MANAGE")
-                        // Các trang khác cần đăng nhập
+                        // CÃ¡c trang khÃ¡c cáº§n Ä‘Äƒng nháº­p
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")           // trang login tự tạo
-                        .loginProcessingUrl("/login")  // URL xử lý form login
-                        .defaultSuccessUrl("/home", true)  // sau login về trang chủ
-                        .failureUrl("/login?error")    // login sai về trang này
+                        .loginPage("/login")           // trang login tá»± táº¡o
+                        .loginProcessingUrl("/login")  // URL xá»­ lÃ½ form login
+                        .successHandler(roleBasedSuccessHandler())
+                        .failureUrl("/login?error")    // login sai vá» trang nÃ y
                         .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
-                        .invalidateHttpSession(true)      // xóa session
-                        .clearAuthentication(true)        // xóa authentication
-                        .deleteCookies("JSESSIONID")      // xóa cookie
+                        .invalidateHttpSession(true)      // xÃ³a session
+                        .clearAuthentication(true)        // xÃ³a authentication
+                        .deleteCookies("JSESSIONID")      // xÃ³a cookie
                         .permitAll()
                 );
 
         return http.build();
     }
 
+    @Bean
+    public AuthenticationSuccessHandler roleBasedSuccessHandler() {
+        return (request, response, authentication) -> {
+            boolean isAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
+            boolean isSeller = authentication.getAuthorities().stream()
+                    .anyMatch(authority -> "ROLE_SELLER".equals(authority.getAuthority()));
+
+            if (isAdmin) {
+                response.sendRedirect("/admin/users");
+            } else if (isSeller) {
+                response.sendRedirect("/seller");
+            } else {
+                response.sendRedirect("/home");
+            }
+        };
+    }
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder builder =
@@ -87,3 +106,4 @@ public class SecurityConfig {
         return builder.build();
     }
 }
+

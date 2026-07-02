@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Media Upload</title>
+    <link rel="stylesheet" th:href="@{/css/seller.css}">
+</head>
+<body>
+<main class="container">
+    <header class="page-header">
+        <div>
+            <h1>Step 2: Media Upload</h1>
+            <p th:text="${product.productName}">Product</p>
+        </div>
+        <a class="btn" th:href="@{/seller/products/{id}/preview(id=${product.productId})}">Preview</a>
+    </header>
+
+    <div th:if="${success}" class="alert success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert error" th:text="${error}"></div>
+
+    <form class="form-card" method="post" enctype="multipart/form-data"
+          th:action="@{/seller/products/{id}/media(id=${product.productId})}">
+        <label>File ảnh/video
+            <input type="file" name="file" accept="image/*,video/mp4,video/webm" required>
+        </label>
+        <label>Slot type
+            <input name="slotType" placeholder="GALLERY / REVIEW / DETAIL">
+        </label>
+        <label>Caption
+            <input name="caption">
+        </label>
+        <label>Display order
+            <input type="number" name="displayOrder" value="0">
+        </label>
+        <label class="checkbox">
+            <input type="checkbox" name="isThumbnail" value="true">
+            Đặt làm thumbnail
+        </label>
+        <button type="submit">Upload Media</button>
+    </form>
+
+    <section class="media-grid">
+        <article class="media-card" th:each="media : ${mediaList}">
+            <img th:if="${media.mediaType == 'IMAGE'}" th:src="${media.mediaUrl}" alt="">
+            <video th:if="${media.mediaType == 'VIDEO'}" controls th:src="${media.mediaUrl}"></video>
+            <strong th:text="${media.isThumbnail ? 'Thumbnail' : media.mediaType}"></strong>
+            <span th:text="${media.caption}"></span>
+            <div class="actions">
+                <form method="post" th:action="@{/seller/products/{productId}/media/{mediaId}/thumbnail(productId=${product.productId},mediaId=${media.mediaId})}">
+                    <button type="submit">Set thumbnail</button>
+                </form>
+                <form method="post" th:action="@{/seller/products/{productId}/media/{mediaId}/delete(productId=${product.productId},mediaId=${media.mediaId})}">
+                    <button type="submit">Delete</button>
+                </form>
+            </div>
+        </article>
+    </section>
+</main>
+</body>
+</html>

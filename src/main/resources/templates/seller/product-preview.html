@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Preview & Publish</title>
+    <link rel="stylesheet" th:href="@{/css/seller.css}">
+</head>
+<body>
+<main class="container">
+    <header class="page-header">
+        <div>
+            <h1>Step 3: Preview & Publish</h1>
+            <p>Kiểm tra lại trước khi đưa sản phẩm ra marketplace.</p>
+        </div>
+        <a class="btn secondary" th:href="@{/seller/products/{id}/media(id=${product.productId})}">Back to Media</a>
+    </header>
+
+    <div th:if="${success}" class="alert success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert error" th:text="${error}"></div>
+
+    <section class="preview">
+        <div>
+            <img class="hero-image" th:if="${product.firstImageUrl != null}" th:src="${product.firstImageUrl}" alt="">
+            <div class="placeholder" th:if="${product.firstImageUrl == null}">No media</div>
+        </div>
+        <div>
+            <h2 th:text="${product.productName}"></h2>
+            <p th:text="${product.description}"></p>
+            <p><strong>Code:</strong> <span th:text="${product.productCode}"></span></p>
+            <p><strong>Price:</strong> <span th:text="${product.price}"></span></p>
+            <p><strong>Status:</strong> <span th:text="${product.productStatus}"></span></p>
+            <div class="actions">
+                <a th:href="@{/seller/products/{id}/edit(id=${product.productId})}">Edit Info</a>
+                <form method="post" th:action="@{/seller/products/{id}/publish(id=${product.productId})}">
+                    <button type="submit">Publish</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="media-grid">
+        <article class="media-card" th:each="media : ${mediaList}">
+            <img th:if="${media.mediaType == 'IMAGE'}" th:src="${media.mediaUrl}" alt="">
+            <video th:if="${media.mediaType == 'VIDEO'}" controls th:src="${media.mediaUrl}"></video>
+            <span th:text="${media.caption}"></span>
+        </article>
+    </section>
+</main>
+</body>
+</html>

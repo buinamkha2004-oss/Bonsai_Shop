@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Products</title>
+    <link rel="stylesheet" th:href="@{/css/seller.css}">
+</head>
+<body>
+<main class="container">
+    <header class="page-header">
+        <div>
+            <h1>My Products</h1>
+            <p>Chỉ hiển thị sản phẩm thuộc seller đang đăng nhập.</p>
+        </div>
+        <a class="btn" th:href="@{/seller/products/new}">Create New Product</a>
+    </header>
+
+    <div th:if="${success}" class="alert success" th:text="${success}"></div>
+    <div th:if="${error}" class="alert error" th:text="${error}"></div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Code</th>
+            <th>Tên cây</th>
+            <th>Giá</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+            <td th:text="${product.productCode}"></td>
+            <td th:text="${product.productName}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.productStatus}"></td>
+            <td class="actions">
+                <a th:href="@{/seller/products/{id}/edit(id=${product.productId})}">Info</a>
+                <a th:href="@{/seller/products/{id}/media(id=${product.productId})}">Media</a>
+                <a th:href="@{/seller/products/{id}/preview(id=${product.productId})}">Preview</a>
+                <form method="post" th:action="@{/seller/products/{id}/delete(id=${product.productId})}">
+                    <button type="submit" onclick="return confirm('Xóa sản phẩm này?')">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

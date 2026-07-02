@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Info</title>
+    <link rel="stylesheet" th:href="@{/css/seller.css}">
+</head>
+<body>
+<main class="container">
+    <header class="page-header">
+        <div>
+            <h1>Step 1: Product Info</h1>
+            <p>Thông tin lõi của cây bonsai.</p>
+        </div>
+        <a class="btn secondary" th:href="@{/seller/products}">Back</a>
+    </header>
+
+    <div th:if="${error}" class="alert error" th:text="${error}"></div>
+
+    <form class="form-card" method="post"
+          th:action="${product == null} ? @{/seller/products} : @{/seller/products/{id}(id=${product.productId})}">
+        <label>Mã sản phẩm
+            <input name="productCode" required th:value="${product != null ? product.productCode : ''}">
+        </label>
+        <label>Tên cây
+            <input name="productName" required th:value="${product != null ? product.productName : ''}">
+        </label>
+        <label>Variety
+            <select name="varietyId" required>
+                <option value="">-- Chọn variety --</option>
+                <option th:each="variety : ${varieties}"
+                        th:value="${variety.varietyId}"
+                        th:selected="${product != null && product.variety.varietyId == variety.varietyId}"
+                        th:text="${variety.varietyName}"></option>
+            </select>
+        </label>
+        <label>Segment
+            <select name="segmentId" required>
+                <option value="">-- Chọn segment --</option>
+                <option th:each="segment : ${segments}"
+                        th:value="${segment.segmentId}"
+                        th:selected="${product != null && product.segment.segmentId == segment.segmentId}"
+                        th:text="${segment.segmentName}"></option>
+            </select>
+        </label>
+        <label>Mô tả
+            <textarea name="description" rows="5" th:text="${product != null ? product.description : ''}"></textarea>
+        </label>
+        <div class="grid">
+            <label>Tuổi
+                <input type="number" name="age" min="0" th:value="${product != null ? product.age : ''}">
+            </label>
+            <label>Chiều cao
+                <input type="number" step="0.01" name="height" min="0" th:value="${product != null ? product.height : ''}">
+            </label>
+            <label>Đường kính thân
+                <input type="number" step="0.01" name="trunkDiameter" min="0" th:value="${product != null ? product.trunkDiameter : ''}">
+            </label>
+        </div>
+        <label>Style
+            <input name="style" th:value="${product != null ? product.style : ''}">
+        </label>
+        <label>Giá
+            <input type="number" step="0.01" name="price" required min="0" th:value="${product != null ? product.price : ''}">
+        </label>
+        <label class="checkbox">
+            <input type="checkbox" name="isPublicPrice" value="true" th:checked="${product == null || product.isPublicPrice}">
+            Public price
+        </label>
+        <input th:if="${product != null}" type="hidden" name="productStatus" th:value="${product.productStatus}">
+        <button type="submit">Save & Continue</button>
+    </form>
+</main>
+</body>
+</html>

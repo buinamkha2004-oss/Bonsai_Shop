@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Seller Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/seller.css}">
+</head>
+<body>
+<main class="container">
+    <header class="page-header">
+        <div>
+            <h1>Seller Dashboard</h1>
+            <p>Quản lý sản phẩm bonsai của bạn.</p>
+        </div>
+        <a class="btn" th:href="@{/seller/products}">My Products</a>
+    </header>
+
+    <section class="stats">
+        <div class="card">
+            <strong th:text="${totalProducts}">0</strong>
+            <span>Tổng sản phẩm</span>
+        </div>
+        <div class="card">
+            <strong th:text="${publishedProducts}">0</strong>
+            <span>Đã publish</span>
+        </div>
+        <div class="card">
+            <strong th:text="${draftProducts}">0</strong>
+            <span>Bản nháp</span>
+        </div>
+    </section>
+</main>
+</body>
+</html>
