@@ -10,33 +10,47 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ProductRepository extends JpaRepository<Product, Integer>, JpaSpecificationExecutor<Product> {
     @Query("""
-        SELECT new com.example.bonsai_shop.product.dto.ProductCardDTO(
-                p.productId,
-                p.productCode,
-                p.productName,
-                v.varietyName,
-                p.age,
-                p.height,
-                p.trunkDiameter,
-                p.price,
-                u.fullName,
-                p.productStatus,
-                m.mediaUrl
-        )
-        FROM Product p
-        JOIN p.variety v
-        JOIN p.seller u
-        LEFT JOIN p.productMedias m
-        WHERE
-                p.isPublicPrice = true
-                AND p.productStatus = 'AVAILABLE'
-                AND (m.isThumbnail = true OR m IS NULL)
-    """)
+                SELECT new com.example.bonsai_shop.product.dto.ProductCardDTO(
+                        p.productId,
+                        p.productCode,
+                        p.productName,
+                        v.varietyName,
+                        p.age,
+                        p.height,
+                        p.trunkDiameter,
+                        p.price,
+                        u.fullName,
+                        p.productStatus,
+                        m.mediaUrl
+                )
+                FROM Product p
+                JOIN p.variety v
+                JOIN p.seller u
+                LEFT JOIN p.productMedias m
+                WHERE
+                        p.isPublicPrice = true
+                        AND p.productStatus = 'AVAILABLE'
+                        AND (m.isThumbnail = true OR m IS NULL)
+            """)
     Page<ProductCardDTO> findMarketplaceProducts(Pageable pageable);
 
-    @Query("SELECT p FROM Product p JOIN FETCH p.variety JOIN FETCH p.seller WHERE p.isPublicPrice = true")
+    @Query("""
+                SELECT p FROM Product p
+                JOIN FETCH p.variety
+                JOIN FETCH p.seller
+                WHERE
+                        p.isPublicPrice = true
+            """)
     Page<Product> findAllActiveProducts(Pageable pageable);
 
-    @Query("SELECT p FROM Product p JOIN FETCH p.variety JOIN FETCH p.seller WHERE p.isPublicPrice = true AND p.productStatus = 'AVAILABLE'")
+    @Query("""
+                SELECT p FROM Product p
+                JOIN FETCH p.variety
+                JOIN FETCH p.seller
+                WHERE
+                        p.isPublicPrice = true
+                        AND p.productStatus = 'AVAILABLE'
+            """)
     Page<Product> findAvailableProductsOnly(Pageable pageable);
+
 }

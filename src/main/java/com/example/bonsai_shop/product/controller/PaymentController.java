@@ -1,7 +1,12 @@
 package com.example.bonsai_shop.product.controller;
 
 import com.example.bonsai_shop.config.VNPayConfig;
+import com.example.bonsai_shop.entity.Product;
+import com.example.bonsai_shop.product.repository.ProductRepository;
+
 import jakarta.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +21,20 @@ import java.util.*;
 @Controller
 public class PaymentController {
 
+    @Autowired
+    private ProductRepository productRepository;
+
     // Tạo link thanh toán VNPay
     @GetMapping("/vnpay/create-payment")
-    public String createPayment(HttpServletRequest req, @RequestParam("amount") long amount) throws UnsupportedEncodingException {
+    public String createPayment(HttpServletRequest req, @RequestParam("productId") Integer productId)
+            throws UnsupportedEncodingException {
 
+        // 1. Lấy sản phẩm thực tế từ Database để đảm bảo an toàn về giá
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Sản phẩm không tồn tại!"));
+
+        // 2. Chuyển đổi giá sản phẩm thành kiểu số nguyên (VND)
+        long amount = product.getPrice().longValue();
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "other";
@@ -70,7 +85,8 @@ public class PaymentController {
                 // Build hash data (quan trọng: VNPay yêu cầu replace '+' bằng '%20' khi encode)
                 hashData.append(fieldName);
                 hashData.append('=');
-                hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()).replace("+", "%20"));
+                hashData.append(
+                        URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()).replace("+", "%20"));
 
                 // Build query string
                 query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()));
