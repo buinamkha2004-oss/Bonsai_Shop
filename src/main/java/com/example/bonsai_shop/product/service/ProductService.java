@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.bonsai_shop.product.repository.ProductSpecifications;
+import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -48,5 +49,19 @@ public class ProductService {
                 ),
                 pageable
         );
+    }
+
+    @Transactional(readOnly = true)
+    public Product getProductById(Integer id) {
+        Product product = productRepository.findById(id).orElse(null);
+        if (product != null) {
+            if (product.getProductMedias() != null) {
+                product.getProductMedias().size();
+            }
+            if (product.getReviews() != null) {
+                product.getReviews().size();
+            }
+        }
+        return product;
     }
 }

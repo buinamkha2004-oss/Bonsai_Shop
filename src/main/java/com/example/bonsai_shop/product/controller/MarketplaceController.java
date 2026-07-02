@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.math.BigDecimal;
 import java.util.List;
@@ -81,7 +82,17 @@ public class MarketplaceController {
     }
 
     @GetMapping({"/products/detail", "/product/{id}"})
-    public String productDetail() {
+    public String productDetail(@PathVariable(value = "id", required = false) Integer id, Model model) {
+        if (id != null) {
+            Product product = productService.getProductById(id);
+            model.addAttribute("product", product);
+        } else {
+            Page<Product> products = productService.getAllActiveProducts(PageRequest.of(0, 1));
+            if (!products.isEmpty()) {
+                Product product = productService.getProductById(products.getContent().get(0).getProductId());
+                model.addAttribute("product", product);
+            }
+        }
         return "product/product-detail";
     }
 }

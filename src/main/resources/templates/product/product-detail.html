@@ -278,8 +278,6 @@
             border-radius: 2px;
         }
         .badge-status-pill {
-            background-color: #E8F5E9;
-            color: #2E7D32;
             font-size: 0.68rem;
             font-weight: 700;
             letter-spacing: 0.08em;
@@ -290,11 +288,31 @@
             gap: 6px;
             margin-left: auto;
         }
+        .badge-status-pill.avail {
+            background-color: #E8F5E9;
+            color: #2E7D32;
+        }
+        .badge-status-pill.avail::before {
+            background-color: #2E7D32;
+        }
+        .badge-status-pill.resv {
+            background-color: #FFF3E0;
+            color: #E65100;
+        }
+        .badge-status-pill.resv::before {
+            background-color: #E65100;
+        }
+        .badge-status-pill.sold {
+            background-color: #FFEBEE;
+            color: #C62828;
+        }
+        .badge-status-pill.sold::before {
+            background-color: #C62828;
+        }
         .badge-status-pill::before {
             content: '';
             width: 6px;
             height: 6px;
-            background-color: #2E7D32;
             border-radius: 50%;
         }
         .product-title {
@@ -622,6 +640,12 @@
             padding: 3px 10px;
             border-radius: 2px;
             display: inline-block;
+        }
+        .table-status-badge.resv {
+            background-color: #D35400;
+        }
+        .table-status-badge.disabled {
+            background-color: #C0392B;
         }
 
         /* --- SELLER PROFILE BANNER --- */
@@ -1181,13 +1205,7 @@
         <ul class="breadcrumb-list">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
             <li class="breadcrumb-item"><a href="#">Marketplace</a></li>
-            <!--
-            TODO
-            Currently hardcoded.
-            Replace with:
-            th:text="${product.productName}"
-            -->
-            <li class="breadcrumb-item active" aria-current="page">Tùng La Hán Dáng Hoành</li>
+            <li class="breadcrumb-item active" aria-current="page" th:text="${product.productName}">Tùng La Hán Dáng Hoành</li>
         </ul>
     </nav>
 </div>
@@ -1202,38 +1220,39 @@
         <section class="col-lg-6">
             <!-- Main Display Image -->
             <div class="gallery-main-wrap">
-                <!--
-                TODO
-                Currently hardcoded main image.
-                Replace with dynamic thumbnail image from ProductMedia list:
-                th:src="${product.firstImageUrl}"
-                -->
-                <img id="mainGalleryImg" src="https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&q=80&w=800" alt="Tùng La Hán Dáng Hoành" class="gallery-main-img">
+                <img id="mainGalleryImg" th:src="${product.firstImageUrl != null ? product.firstImageUrl : 'https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&q=80&w=800'}" th:alt="${product.productName}" class="gallery-main-img">
             </div>
 
             <!-- Thumbnail Selector Strip -->
-            <!--
-            TODO
-            Currently hardcoded list.
-            Replace with th:each loop traversing product.productMedias:
-            th:each="media : ${product.productMedias}"
-            -->
             <div class="gallery-thumbnails-row">
-                <div class="gallery-thumb-item active" onclick="switchMainImage(this, 'https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&q=80&w=800')">
-                    <img src="https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&q=80&w=150" alt="Front View">
-                </div>
-                <div class="gallery-thumb-item" onclick="switchMainImage(this, 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?auto=format&fit=crop&q=80&w=800')">
-                    <img src="https://images.unsplash.com/photo-1592150621744-aca64f48394a?auto=format&fit=crop&q=80&w=150" alt="Side View">
-                </div>
-                <div class="gallery-thumb-item" onclick="switchMainImage(this, 'https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&q=80&w=800')">
-                    <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&q=80&w=150" alt="Root Structure">
-                </div>
-                <div class="gallery-thumb-item" onclick="switchMainImage(this, 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&q=80&w=800')">
-                    <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&q=80&w=150" alt="Foliage Detail">
-                </div>
-                <div class="gallery-thumb-item" onclick="switchMainImage(this, 'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&q=80&w=800')">
-                    <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&q=80&w=150" alt="Pot View">
-                </div>
+                <!-- Dynamic thumbnails if media exists in DB -->
+                <th:block th:if="${product.productMedias != null and !product.productMedias.isEmpty()}">
+                    <div th:each="media, iterStat : ${product.productMedias}"
+                         th:classappend="${iterStat.first ? 'active' : ''}"
+                         class="gallery-thumb-item"
+                         th:data-image-url="${media.mediaUrl}"
+                         onclick="switchMainImage(this, this.getAttribute('data-image-url'))">
+                        <img th:src="${media.mediaUrl}" th:alt="${product.productName}">
+                    </div>
+                </th:block>
+                <!-- Fallback static thumbnails if no media exists in DB -->
+                <th:block th:if="${product.productMedias == null or product.productMedias.isEmpty()}">
+                    <div class="gallery-thumb-item active" onclick="switchMainImage(this, 'https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&q=80&w=800')">
+                        <!-- HARDCODED --><img src="https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&q=80&w=150" alt="Front View">
+                    </div>
+                    <div class="gallery-thumb-item" onclick="switchMainImage(this, 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?auto=format&fit=crop&q=80&w=800')">
+                        <!-- HARDCODED --><img src="https://images.unsplash.com/photo-1592150621744-aca64f48394a?auto=format&fit=crop&q=80&w=150" alt="Side View">
+                    </div>
+                    <div class="gallery-thumb-item" onclick="switchMainImage(this, 'https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&q=80&w=800')">
+                        <!-- HARDCODED --><img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&q=80&w=150" alt="Root Structure">
+                    </div>
+                    <div class="gallery-thumb-item" onclick="switchMainImage(this, 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&q=80&w=800')">
+                        <!-- HARDCODED --><img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&q=80&w=150" alt="Foliage Detail">
+                    </div>
+                    <div class="gallery-thumb-item" onclick="switchMainImage(this, 'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&q=80&w=800')">
+                        <!-- HARDCODED --><img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&q=80&w=150" alt="Pot View">
+                    </div>
+                </th:block>
             </div>
 
             <div class="gallery-caption-text">
@@ -1245,110 +1264,68 @@
         <section class="col-lg-6">
             <!-- Badges Row -->
             <div class="info-badge-row">
-                <!--
-                TODO
-                Replace hardcoded Segment with:
-                th:text="${product.segment.segmentName}"
-                -->
-                <span class="badge-premium">Premium</span>
-                
-                <!--
-                TODO
-                Replace hardcoded Style with:
-                th:text="${product.style}"
-                -->
-                <span class="badge-style">Dáng Hoành</span>
-                
-                <!--
-                TODO
-                Replace hardcoded status badge with:
-                th:text="${product.productStatus}"
-                th:classappend="${product.productStatus == 'AVAILABLE' ? 'badge-status-pill' : 'badge-status-pill-disabled'}"
-                -->
-                <span class="badge-status-pill">AVAILABLE</span>
+                <span class="badge-premium" th:text="${product.segment != null ? product.segment.segmentName : 'N/A'}">Premium</span>
+                <span class="badge-style" th:text="${product.style != null ? product.style : 'N/A'}">Dáng Hoành</span>
+                <span th:text="${product.productStatus != null ? product.productStatus : 'N/A'}"
+                      th:classappend="${product.productStatus != null ? (product.productStatus == 'AVAILABLE' ? 'avail' : (product.productStatus == 'RESERVED' ? 'resv' : 'sold')) : 'avail'}"
+                      class="badge-status-pill">AVAILABLE</span>
             </div>
 
             <!-- Product Title & Scientific Name -->
-            <!--
-            TODO
-            Replace hardcoded name and scientific name with:
-            th:text="${product.productName}"
-            th:text="${product.variety.scientificName}" (or similar)
-            -->
-            <h1 class="product-title">Tùng La Hán Dáng Hoành</h1>
-            <p class="product-scientific-name">Podocarpus macrophyllus</p>
+            <h1 class="product-title" th:text="${product.productName}">Tùng La Hán Dáng Hoành</h1>
+            <!-- Tên khoa học không có trong database entity (Variety chỉ có varietyName) -->
+            <p class="product-scientific-name"><!-- HARDCODED -->Podocarpus macrophyllus</p>
 
             <!-- Star ratings and Product Code -->
-            <!--
-            TODO
-            Replace hardcoded Code and rating with:
-            th:text="${'Mã: ' + product.productCode}"
-            th:text="${product.averageRating}"
-            -->
             <div class="rating-code-row">
-                <span class="rating-star-val"><i class="fa-solid fa-star"></i> 4.9</span>
+                <span class="rating-star-val">
+                    <i class="fa-solid fa-star"></i>
+                    <span th:text="${product.averageRating != null ? #numbers.formatDecimal(product.averageRating, 1, 1) : '0.0'}">4.9</span>
+                </span>
                 <span class="text-muted">|</span>
-                <span>Mã: BSMS-TLH-218</span>
+                <span th:text="${'Mã: ' + product.productCode}">Mã: BSMS-TLH-218</span>
             </div>
 
             <!-- Price Panel -->
             <div class="price-panel">
                 <div class="price-label">Giá cố định</div>
-                <!--
-                TODO
-                Replace hardcoded price with:
-                th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'POINT') + ' đ'}"
-                -->
-                <div class="price-value-large">8.900.000 đ</div>
+                <div class="price-value-large" th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'POINT') + ' đ'}">8.900.000 đ</div>
                 <p class="price-subtext">Đã bao gồm hồ sơ phả hệ • Phí vận chuyển cẩu chuyên dụng tính riêng</p>
             </div>
 
             <!-- Parameters Grid Spec -->
-            <!--
-            TODO
-            Replace hardcoded parameter cell values with:
-            th:text="${product.age + ' năm'}"
-            th:text="${product.height + ' cm'}"
-            th:text="${product.trunkDiameter + ' cm'}"
-            th:text="${product.variety.varietyName}"
-            th:text="${product.style}"
-            -->
             <div class="spec-grid-layout">
                 <div class="spec-grid-cell">
                     <div class="spec-cell-lbl"><i class="fa-regular fa-calendar"></i> Tuổi</div>
-                    <div class="spec-cell-val">18 năm</div>
+                    <div class="spec-cell-val" th:text="${product.age != null ? product.age + ' năm' : 'N/A'}">18 năm</div>
                 </div>
                 <div class="spec-grid-cell">
                     <div class="spec-cell-lbl"><i class="fa-solid fa-arrows-up-down"></i> Chiều cao</div>
-                    <div class="spec-cell-val">80 cm</div>
+                    <div class="spec-cell-val" th:text="${product.height != null ? product.height + ' cm' : 'N/A'}">80 cm</div>
                 </div>
                 <div class="spec-grid-cell">
                     <div class="spec-cell-lbl"><i class="fa-solid fa-arrows-left-right"></i> Tán rộng</div>
-                    <div class="spec-cell-val">70 cm</div>
+                    <!-- Tán rộng không có trong database entity -->
+                    <div class="spec-cell-val"><!-- HARDCODED -->70 cm</div>
                 </div>
                 <div class="spec-grid-cell">
                     <div class="spec-cell-lbl"><i class="fa-solid fa-circle-notch"></i> Đường kính thân</div>
-                    <div class="spec-cell-val">22 cm</div>
+                    <div class="spec-cell-val" th:text="${product.trunkDiameter != null ? product.trunkDiameter + ' cm' : 'N/A'}">22 cm</div>
                 </div>
                 <div class="spec-grid-cell">
                     <div class="spec-cell-lbl"><i class="fa-solid fa-seedling"></i> Loài</div>
-                    <div class="spec-cell-val">Tùng La Hán</div>
+                    <div class="spec-cell-val" th:text="${product.variety != null ? product.variety.varietyName : 'N/A'}">Tùng La Hán</div>
                 </div>
                 <div class="spec-grid-cell">
                     <div class="spec-cell-lbl"><i class="fa-solid fa-leaf"></i> Thế dáng</div>
-                    <div class="spec-cell-val">Dáng Hoành</div>
+                    <div class="spec-cell-val" th:text="${product.style != null ? product.style : 'N/A'}">Dáng Hoành</div>
                 </div>
             </div>
 
             <!-- Seller Brief Info -->
-            <!--
-            TODO
-            Replace hardcoded seller info with:
-            th:src="${product.seller.avatar != null ? product.seller.avatar : 'default-avatar.png'}"
-            th:text="${product.seller.fullName}"
-            th:text="${product.seller.address}" (or garden details)
-            -->
+            <!-- Chi tiết nghệ nhân/nhà vườn không có trong database entity (User chỉ có thông tin cơ bản) -->
             <div class="seller-summary-box">
+                <!-- HARDCODED -->
                 <div class="seller-avatar-wrap">
                     <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150" alt="Avatar">
                 </div>
@@ -1365,7 +1342,9 @@
             <div class="mt-4">
                 <div class="action-flex-row">
                     <!-- Buy Now Button -->
-                    <button class="btn-buy-vnpay">Buy Now • VNPay</button>
+                    <button class="btn-buy-vnpay" th:if="${product.productStatus == 'AVAILABLE'}">Buy Now • VNPay</button>
+                    <button class="btn-card-disabled" style="width: 100%; padding: 14px 0;" disabled th:if="${product.productStatus == 'RESERVED'}"><i class="fa-solid fa-lock"></i> Reserved</button>
+                    <button class="btn-card-disabled" style="width: 100%; padding: 14px 0;" disabled th:if="${product.productStatus == 'SOLD'}"><i class="fa-solid fa-ban"></i> Sold</button>
                     
                     <!-- Wishlist Button -->
                     <button class="btn-action-square" title="Yêu thích">
@@ -1379,7 +1358,7 @@
                 </div>
 
                 <!-- Add to Cart Outline -->
-                <button class="btn-add-cart-outline">
+                <button class="btn-add-cart-outline" th:if="${product.productStatus == 'AVAILABLE'}">
                     <i class="fa-solid fa-cart-shopping"></i> Add to Cart
                 </button>
 
@@ -1408,30 +1387,29 @@
         <span class="section-tag-gold">Câu chuyện tác phẩm</span>
         <h2 class="story-heading">Một đời cây — một đời nghệ nhân</h2>
         
-        <!--
-        TODO
-        Replace hardcoded narrative text with:
-        th:text="${product.description}"
-        -->
-        <p class="story-intro-para">
+        <p class="story-intro-para" th:text="${product.description}">
             Tùng được uốn nắn qua hơn 18 năm dưới bàn tay của nghệ nhân Nguyễn Văn Thành tại vùng đất Nam Định — cái nôi của nghệ thuật bonsai Bắc Bộ.
         </p>
 
         <!-- Chronological Story Bullet Nodes -->
+        <!-- Các phần cốt truyện chi tiết không lưu trong DB (được giữ làm text tĩnh) -->
         <div class="story-timeline-wrap">
             <div class="story-timeline-node">
+                <!-- HARDCODED -->
                 <h3 class="story-node-title">Nguồn gốc</h3>
                 <p class="story-node-desc">
                     Cây gốc khai thác từ vùng đồi trung du, được dưỡng và tạo thế tại vườn Thành Cổ từ năm 2012. Đất trồng pha trộn theo công thức truyền thức của làng nghề, giúp bộ rễ phát triển bền bỉ và lá xanh quanh năm.
                 </p>
             </div>
             <div class="story-timeline-node">
+                <!-- HARDCODED -->
                 <h3 class="story-node-title">Lịch sử</h3>
                 <p class="story-node-desc">
                     Tác phẩm đã từng tham gia triển lãm Bonsai Việt Nam 2022 và được hội đồng nghệ nhân đánh giá cao về thế dáng cân đối và bộ thân chi tiết.
                 </p>
             </div>
             <div class="story-timeline-node">
+                <!-- HARDCODED -->
                 <h3 class="story-node-title">Nghệ thuật chế tác</h3>
                 <p class="story-node-desc">
                     Mỗi đường chỉ, mỗi nét thân đều được uốn tỉ mỉ bằng kỹ thuật truyền thống, tôn vinh vẻ đẹp tự nhiên thay vì ép buộc dáng cây theo khuôn mẫu.
@@ -1460,69 +1438,63 @@
             </div>
 
             <!-- Right Side: Spec Table -->
-            <!--
-            TODO
-            Replace hardcoded technical specifications with:
-            th:text="${product.productCode}"
-            th:text="${product.productName}"
-            th:text="${product.variety.scientificName}"
-            th:text="${product.variety.varietyName}"
-            th:text="${product.style}"
-            th:text="${product.age} + ' năm'"
-            th:text="${product.height} + ' cm'"
-            th:text="${product.trunkDiameter} + ' cm'"
-            th:text="${product.segment.segmentName}"
-            -->
             <div class="col-lg-8">
                 <table class="specs-table">
                     <tbody>
                         <tr>
                             <td class="specs-table-lbl">MÃ SẢN PHẨM</td>
-                            <td class="specs-table-val">BSMS-TLH-218</td>
+                            <td class="specs-table-val" th:text="${product.productCode}">BSMS-TLH-218</td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">TÊN THƯƠNG GỌI</td>
-                            <td class="specs-table-val">Tùng La Hán Dáng Hoành</td>
+                            <td class="specs-table-val" th:text="${product.productName}">Tùng La Hán Dáng Hoành</td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">TÊN KHOA HỌC</td>
-                            <td class="specs-table-val"><i>Podocarpus macrophyllus</i></td>
+                            <!-- Tên khoa học không có trong database entity (Variety chỉ có varietyName) -->
+                            <td class="specs-table-val"><i><!-- HARDCODED -->Podocarpus macrophyllus</i></td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">LOÀI</td>
-                            <td class="specs-table-val">Tùng La Hán</td>
+                            <td class="specs-table-val" th:text="${product.variety != null ? product.variety.varietyName : 'N/A'}">Tùng La Hán</td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">THẾ DÁNG</td>
-                            <td class="specs-table-val">Dáng Hoành</td>
+                            <td class="specs-table-val" th:text="${product.style}">Dáng Hoành</td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">TUỔI CÂY</td>
-                            <td class="specs-table-val">18 năm</td>
+                            <td class="specs-table-val" th:text="${product.age != null ? product.age + ' năm' : 'N/A'}">18 năm</td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">CHIỀU CAO</td>
-                            <td class="specs-table-val">80 cm</td>
+                            <td class="specs-table-val" th:text="${product.height != null ? product.height + ' cm' : 'N/A'}">80 cm</td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">TÁN RỘNG</td>
-                            <td class="specs-table-val">70 cm</td>
+                            <!-- Tán rộng không có trong database entity -->
+                            <td class="specs-table-val"><!-- HARDCODED -->70 cm</td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">ĐƯỜNG KÍNH THÂN</td>
-                            <td class="specs-table-val">22 cm</td>
+                            <td class="specs-table-val" th:text="${product.trunkDiameter != null ? product.trunkDiameter + ' cm' : 'N/A'}">22 cm</td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">PHÂN KHÚC</td>
-                            <td class="specs-table-val">Premium</td>
+                            <td class="specs-table-val" th:text="${product.segment != null ? product.segment.segmentName : 'N/A'}">Premium</td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">TÌNH TRẠNG</td>
-                            <td class="specs-table-val"><span class="table-status-badge">AVAILABLE</span></td>
+                            <td class="specs-table-val">
+                                <span th:text="${product.productStatus}"
+                                      th:classappend="${product.productStatus == 'AVAILABLE' ? '' : (product.productStatus == 'RESERVED' ? 'resv' : 'disabled')}"
+                                      class="table-status-badge">AVAILABLE</span>
+                            </td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">SẴN HÀNG GIAO NGAY</td>
-                            <td class="specs-table-val">Có</td>
+                            <!-- Sẵn hàng giao ngay không có trong database entity -->
+                            <td class="specs-table-val"><!-- HARDCODED -->Có</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1537,14 +1509,9 @@
 <!-- ===================================================== -->
 <section class="container py-5">
     <!-- Detailed Seller Profile Box -->
-    <!--
-    TODO
-    Replace hardcoded profile block with:
-    th:src="${product.seller.avatar != null ? product.seller.avatar : 'default-avatar.png'}"
-    th:text="${product.seller.fullName}"
-    th:text="${product.seller.address}"
-    -->
+    <!-- Chi tiết nghệ nhân/nhà vườn không có trong database entity (User chỉ có thông tin cơ bản) -->
     <div class="seller-profile-banner">
+        <!-- HARDCODED -->
         <div class="seller-profile-left">
             <div class="seller-large-avatar">
                 <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150" alt="Nghệ nhân Nguyễn Văn Thành">
