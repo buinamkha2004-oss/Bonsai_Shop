@@ -1205,6 +1205,7 @@
         <ul class="breadcrumb-list">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
             <li class="breadcrumb-item"><a href="#">Marketplace</a></li>
+            <!-- CALL DB: product.productName -->
             <li class="breadcrumb-item active" aria-current="page" th:text="${product.productName}">Tùng La Hán Dáng Hoành</li>
         </ul>
     </nav>
@@ -1219,12 +1220,14 @@
         <!-- Left Column: Product Gallery -->
         <section class="col-lg-6">
             <!-- Main Display Image -->
+            <!-- CALL DB: product.firstImageUrl, product.productName -->
             <div class="gallery-main-wrap">
                 <img id="mainGalleryImg" th:src="${product.firstImageUrl != null ? product.firstImageUrl : 'https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&q=80&w=800'}" th:alt="${product.productName}" class="gallery-main-img">
             </div>
 
             <!-- Thumbnail Selector Strip -->
             <div class="gallery-thumbnails-row">
+                <!-- CALL DB: product.productMedias, product.productName -->
                 <!-- Dynamic thumbnails if media exists in DB -->
                 <th:block th:if="${product.productMedias != null and !product.productMedias.isEmpty()}">
                     <div th:each="media, iterStat : ${product.productMedias}"
@@ -1235,7 +1238,7 @@
                         <img th:src="${media.mediaUrl}" th:alt="${product.productName}">
                     </div>
                 </th:block>
-                <!-- Fallback static thumbnails if no media exists in DB -->
+                <!-- HARDCODED Fallback if no media exists in DB -->
                 <th:block th:if="${product.productMedias == null or product.productMedias.isEmpty()}">
                     <div class="gallery-thumb-item active" onclick="switchMainImage(this, 'https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&q=80&w=800')">
                         <!-- HARDCODED --><img src="https://images.unsplash.com/photo-1599599810769-bcde5a160d32?auto=format&fit=crop&q=80&w=150" alt="Front View">
@@ -1264,31 +1267,38 @@
         <section class="col-lg-6">
             <!-- Badges Row -->
             <div class="info-badge-row">
+                <!-- CALL DB: product.segment.segmentName -->
                 <span class="badge-premium" th:text="${product.segment != null ? product.segment.segmentName : 'N/A'}">Premium</span>
+                <!-- CALL DB: product.style -->
                 <span class="badge-style" th:text="${product.style != null ? product.style : 'N/A'}">Dáng Hoành</span>
+                <!-- CALL DB: product.productStatus -->
                 <span th:text="${product.productStatus != null ? product.productStatus : 'N/A'}"
                       th:classappend="${product.productStatus != null ? (product.productStatus == 'AVAILABLE' ? 'avail' : (product.productStatus == 'RESERVED' ? 'resv' : 'sold')) : 'avail'}"
                       class="badge-status-pill">AVAILABLE</span>
             </div>
 
             <!-- Product Title & Scientific Name -->
+            <!-- CALL DB: product.productName -->
             <h1 class="product-title" th:text="${product.productName}">Tùng La Hán Dáng Hoành</h1>
-            <!-- Tên khoa học không có trong database entity (Variety chỉ có varietyName) -->
+            <!-- HARDCODED: Tên khoa học không có trong database entity (Variety chỉ có varietyName) -->
             <p class="product-scientific-name"><!-- HARDCODED -->Podocarpus macrophyllus</p>
 
             <!-- Star ratings and Product Code -->
             <div class="rating-code-row">
                 <span class="rating-star-val">
                     <i class="fa-solid fa-star"></i>
+                    <!-- CALL DB: product.averageRating -->
                     <span th:text="${product.averageRating != null ? #numbers.formatDecimal(product.averageRating, 1, 1) : '0.0'}">4.9</span>
                 </span>
                 <span class="text-muted">|</span>
+                <!-- CALL DB: product.productCode -->
                 <span th:text="${'Mã: ' + product.productCode}">Mã: BSMS-TLH-218</span>
             </div>
 
             <!-- Price Panel -->
             <div class="price-panel">
                 <div class="price-label">Giá cố định</div>
+                <!-- CALL DB: product.price -->
                 <div class="price-value-large" th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'POINT') + ' đ'}">8.900.000 đ</div>
                 <p class="price-subtext">Đã bao gồm hồ sơ phả hệ • Phí vận chuyển cẩu chuyên dụng tính riêng</p>
             </div>
@@ -1296,34 +1306,39 @@
             <!-- Parameters Grid Spec -->
             <div class="spec-grid-layout">
                 <div class="spec-grid-cell">
-                    <div class="spec-cell-lbl"><i class="fa-regular fa-calendar"></i> Tuổi</div>
-                    <div class="spec-cell-val" th:text="${product.age != null ? product.age + ' năm' : 'N/A'}">18 năm</div>
+                        <div class="spec-cell-lbl"><i class="fa-regular fa-calendar"></i> Tuổi</div>
+                        <!-- CALL DB: product.age (với fallback thiết kế tĩnh) -->
+                        <div class="spec-cell-val" th:text="${product.age != null ? product.age + ' năm' : '18 năm'}">18 năm</div>
                 </div>
                 <div class="spec-grid-cell">
                     <div class="spec-cell-lbl"><i class="fa-solid fa-arrows-up-down"></i> Chiều cao</div>
-                    <div class="spec-cell-val" th:text="${product.height != null ? product.height + ' cm' : 'N/A'}">80 cm</div>
+                    <!-- CALL DB: product.height (với fallback thiết kế tĩnh) -->
+                    <div class="spec-cell-val" th:text="${product.height != null ? product.height + ' cm' : '80 cm'}">80 cm</div>
                 </div>
                 <div class="spec-grid-cell">
                     <div class="spec-cell-lbl"><i class="fa-solid fa-arrows-left-right"></i> Tán rộng</div>
-                    <!-- Tán rộng không có trong database entity -->
+                    <!-- HARDCODED: Tán rộng không có trong DB entity -->
                     <div class="spec-cell-val"><!-- HARDCODED -->70 cm</div>
                 </div>
                 <div class="spec-grid-cell">
                     <div class="spec-cell-lbl"><i class="fa-solid fa-circle-notch"></i> Đường kính thân</div>
-                    <div class="spec-cell-val" th:text="${product.trunkDiameter != null ? product.trunkDiameter + ' cm' : 'N/A'}">22 cm</div>
+                    <!-- CALL DB: product.trunkDiameter (với fallback thiết kế tĩnh) -->
+                    <div class="spec-cell-val" th:text="${product.trunkDiameter != null ? product.trunkDiameter + ' cm' : '22 cm'}">22 cm</div>
                 </div>
                 <div class="spec-grid-cell">
                     <div class="spec-cell-lbl"><i class="fa-solid fa-seedling"></i> Loài</div>
-                    <div class="spec-cell-val" th:text="${product.variety != null ? product.variety.varietyName : 'N/A'}">Tùng La Hán</div>
+                    <!-- CALL DB: product.variety.varietyName (với fallback thiết kế tĩnh) -->
+                    <div class="spec-cell-val" th:text="${product.variety != null and product.variety.varietyName != null ? product.variety.varietyName : 'Tùng La Hán'}">Tùng La Hán</div>
                 </div>
                 <div class="spec-grid-cell">
                     <div class="spec-cell-lbl"><i class="fa-solid fa-leaf"></i> Thế dáng</div>
-                    <div class="spec-cell-val" th:text="${product.style != null ? product.style : 'N/A'}">Dáng Hoành</div>
+                    <!-- CALL DB: product.style (với fallback thiết kế tĩnh) -->
+                    <div class="spec-cell-val" th:text="${product.style != null ? product.style : 'Dáng Hoành'}">Dáng Hoành</div>
                 </div>
             </div>
 
             <!-- Seller Brief Info -->
-            <!-- Chi tiết nghệ nhân/nhà vườn không có trong database entity (User chỉ có thông tin cơ bản) -->
+            <!-- HARDCODED: Chi tiết nghệ nhân/nhà vườn không có trong DB entity (User chỉ có thông tin cơ bản) -->
             <div class="seller-summary-box">
                 <!-- HARDCODED -->
                 <div class="seller-avatar-wrap">
@@ -1387,12 +1402,13 @@
         <span class="section-tag-gold">Câu chuyện tác phẩm</span>
         <h2 class="story-heading">Một đời cây — một đời nghệ nhân</h2>
         
+        <!-- CALL DB: product.description -->
         <p class="story-intro-para" th:text="${product.description}">
             Tùng được uốn nắn qua hơn 18 năm dưới bàn tay của nghệ nhân Nguyễn Văn Thành tại vùng đất Nam Định — cái nôi của nghệ thuật bonsai Bắc Bộ.
         </p>
 
         <!-- Chronological Story Bullet Nodes -->
-        <!-- Các phần cốt truyện chi tiết không lưu trong DB (được giữ làm text tĩnh) -->
+        <!-- HARDCODED: Các phần cốt truyện chi tiết không lưu trong DB (được giữ làm text tĩnh) -->
         <div class="story-timeline-wrap">
             <div class="story-timeline-node">
                 <!-- HARDCODED -->
@@ -1402,14 +1418,14 @@
                 </p>
             </div>
             <div class="story-timeline-node">
-                <!-- HARDCODED -->
+                <!-- HARDCODED: Lịch sử tác phẩm không lưu trong DB -->
                 <h3 class="story-node-title">Lịch sử</h3>
                 <p class="story-node-desc">
                     Tác phẩm đã từng tham gia triển lãm Bonsai Việt Nam 2022 và được hội đồng nghệ nhân đánh giá cao về thế dáng cân đối và bộ thân chi tiết.
                 </p>
             </div>
             <div class="story-timeline-node">
-                <!-- HARDCODED -->
+                <!-- HARDCODED: Nghệ thuật chế tác không lưu trong DB -->
                 <h3 class="story-node-title">Nghệ thuật chế tác</h3>
                 <p class="story-node-desc">
                     Mỗi đường chỉ, mỗi nét thân đều được uốn tỉ mỉ bằng kỹ thuật truyền thống, tôn vinh vẻ đẹp tự nhiên thay vì ép buộc dáng cây theo khuôn mẫu.
@@ -1443,57 +1459,66 @@
                     <tbody>
                         <tr>
                             <td class="specs-table-lbl">MÃ SẢN PHẨM</td>
-                            <td class="specs-table-val" th:text="${product.productCode}">BSMS-TLH-218</td>
+                            <!-- CALL DB: product.productCode (với fallback thiết kế tĩnh) -->
+                            <td class="specs-table-val" th:text="${product.productCode != null ? product.productCode : 'BSMS-TLH-218'}">BSMS-TLH-218</td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">TÊN THƯƠNG GỌI</td>
-                            <td class="specs-table-val" th:text="${product.productName}">Tùng La Hán Dáng Hoành</td>
+                            <!-- CALL DB: product.productName (với fallback thiết kế tĩnh) -->
+                            <td class="specs-table-val" th:text="${product.productName != null ? product.productName : 'Tùng La Hán Dáng Hoành'}">Tùng La Hán Dáng Hoành</td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">TÊN KHOA HỌC</td>
-                            <!-- Tên khoa học không có trong database entity (Variety chỉ có varietyName) -->
+                            <!-- HARDCODED: Tên khoa học không có trong DB entity (Variety chỉ có varietyName) -->
                             <td class="specs-table-val"><i><!-- HARDCODED -->Podocarpus macrophyllus</i></td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">LOÀI</td>
-                            <td class="specs-table-val" th:text="${product.variety != null ? product.variety.varietyName : 'N/A'}">Tùng La Hán</td>
+                            <!-- CALL DB: product.variety.varietyName (với fallback thiết kế tĩnh) -->
+                            <td class="specs-table-val" th:text="${product.variety != null and product.variety.varietyName != null ? product.variety.varietyName : 'Tùng La Hán'}">Tùng La Hán</td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">THẾ DÁNG</td>
-                            <td class="specs-table-val" th:text="${product.style}">Dáng Hoành</td>
+                            <!-- CALL DB: product.style (với fallback thiết kế tĩnh) -->
+                            <td class="specs-table-val" th:text="${product.style != null ? product.style : 'Dáng Hoành'}">Dáng Hoành</td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">TUỔI CÂY</td>
-                            <td class="specs-table-val" th:text="${product.age != null ? product.age + ' năm' : 'N/A'}">18 năm</td>
+                            <!-- CALL DB: product.age (với fallback thiết kế tĩnh) -->
+                            <td class="specs-table-val" th:text="${product.age != null ? product.age + ' năm' : '18 năm'}">18 năm</td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">CHIỀU CAO</td>
-                            <td class="specs-table-val" th:text="${product.height != null ? product.height + ' cm' : 'N/A'}">80 cm</td>
+                            <!-- CALL DB: product.height (với fallback thiết kế tĩnh) -->
+                            <td class="specs-table-val" th:text="${product.height != null ? product.height + ' cm' : '80 cm'}">80 cm</td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">TÁN RỘNG</td>
-                            <!-- Tán rộng không có trong database entity -->
+                            <!-- HARDCODED: Tán rộng không có trong DB entity -->
                             <td class="specs-table-val"><!-- HARDCODED -->70 cm</td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">ĐƯỜNG KÍNH THÂN</td>
-                            <td class="specs-table-val" th:text="${product.trunkDiameter != null ? product.trunkDiameter + ' cm' : 'N/A'}">22 cm</td>
+                            <!-- CALL DB: product.trunkDiameter (với fallback thiết kế tĩnh) -->
+                            <td class="specs-table-val" th:text="${product.trunkDiameter != null ? product.trunkDiameter + ' cm' : '22 cm'}">22 cm</td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">PHÂN KHÚC</td>
-                            <td class="specs-table-val" th:text="${product.segment != null ? product.segment.segmentName : 'N/A'}">Premium</td>
+                            <!-- CALL DB: product.segment.segmentName (với fallback thiết kế tĩnh) -->
+                            <td class="specs-table-val" th:text="${product.segment != null and product.segment.segmentName != null ? product.segment.segmentName : 'Premium'}">Premium</td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">TÌNH TRẠNG</td>
+                            <!-- CALL DB: product.productStatus (với fallback thiết kế tĩnh) -->
                             <td class="specs-table-val">
-                                <span th:text="${product.productStatus}"
-                                      th:classappend="${product.productStatus == 'AVAILABLE' ? '' : (product.productStatus == 'RESERVED' ? 'resv' : 'disabled')}"
+                                <span th:text="${product.productStatus != null ? product.productStatus : 'AVAILABLE'}"
+                                      th:classappend="${product.productStatus != null ? (product.productStatus == 'AVAILABLE' ? '' : (product.productStatus == 'RESERVED' ? 'resv' : 'disabled')) : ''}"
                                       class="table-status-badge">AVAILABLE</span>
                             </td>
                         </tr>
                         <tr>
                             <td class="specs-table-lbl">SẴN HÀNG GIAO NGAY</td>
-                            <!-- Sẵn hàng giao ngay không có trong database entity -->
+                            <!-- HARDCODED: Sẵn hàng giao ngay không có trong DB entity -->
                             <td class="specs-table-val"><!-- HARDCODED -->Có</td>
                         </tr>
                     </tbody>
@@ -1509,7 +1534,7 @@
 <!-- ===================================================== -->
 <section class="container py-5">
     <!-- Detailed Seller Profile Box -->
-    <!-- Chi tiết nghệ nhân/nhà vườn không có trong database entity (User chỉ có thông tin cơ bản) -->
+    <!-- HARDCODED: Chi tiết nghệ nhân/nhà vườn không có trong DB entity (User chỉ có thông tin cơ bản) -->
     <div class="seller-profile-banner">
         <!-- HARDCODED -->
         <div class="seller-profile-left">
@@ -1536,7 +1561,7 @@
 </section>
 
 <!-- ===================================================== -->
-<!-- RELATED PRODUCTS SECTION -->
+<!-- RELATED PRODUCTS SECTION // FIX CỨNG-->
 <!-- ===================================================== -->
 <section class="related-section">
     <div class="container">
